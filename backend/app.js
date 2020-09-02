@@ -1,15 +1,15 @@
 const express = require('express')
 const mongoose = require('mongoose');
-const passport = require('passport');
 const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 const chalk = require('chalk');
 const config = require('./config');
+var cors = require('cors')
 
 dotenv.config({ path: '.env' });
 
 const app = express();
-const port = 3000;
+const port = 8080;
 const db = config.MONGODB_URI;
 
 mongoose.set('useFindAndModify', false);
@@ -39,6 +39,7 @@ mongoose.connection.once('open', () => {
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors());
 
 require("./routes/index")(app);
 

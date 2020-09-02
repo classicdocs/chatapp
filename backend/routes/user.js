@@ -51,11 +51,7 @@ exports.register = (req, res, next) => {
   User.create({email, firstName, lastName, password : hashedPassword}, (err, user) => {
     if (err) return res.status(500).send("There was a problem registering the user.")
     // create a token
-
-    let token = jwt.sign({ id: user._id }, config.SECRET, {
-      expiresIn: 86400 // expires in 24 hours
-    });
-    res.status(200).send({ auth: true, token: token });
+    res.status(200).send("Successfully registered!");
   }); 
 };
 
