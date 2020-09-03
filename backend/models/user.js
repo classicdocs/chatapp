@@ -5,9 +5,23 @@ const UserSchema = new mongoose.Schema({
   firstName: String,
   lastName: String,
   password: String,
+  friends: []
 }, {timestamps: true});
 
 
 const User = mongoose.model('User', UserSchema, 'users');
 
-module.exports = User;
+function toDto(user) {
+  return {
+    email: user.email,
+    firstName: user.firstName,
+    lastName: user.lastName
+  }
+}
+
+function toDtos(users) {
+  return users.map(user => toDto(user));
+}
+
+module.exports = {User, toDtos};
+

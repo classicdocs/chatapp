@@ -23,7 +23,7 @@ mongoose.connection.on('error', (err) => {
   process.exit();
 });
 
-var User = require('./models/user');
+var {User} = require('./models/user');
 
 mongoose.connection.once('open', () => {
   console.log("Connected to MongoDB");

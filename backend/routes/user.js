@@ -1,7 +1,7 @@
 var jwt = require('jsonwebtoken');
 var bcrypt = require('bcryptjs');
 var config = require('../config');
-const User = require('../models/user');
+const {User, toDtos} = require('../models/user');
 const validator = require('validator');
 const validateParams = require('../util/validator');
 
@@ -75,3 +75,18 @@ exports.me = (req, res, next) => {
   });
 }
 
+
+/**
+ * GEt /user/friends
+ */
+exports.searchFriends = (req, res, next) => {
+
+  const firstName = req.query.firstName ? req.query.firstName : "";
+  const lastName = req.query.lastName ? req.query.lastName : "";
+
+  User.find({ firstName: new RegExp(firstName, 'i'), lastName: new RegExp(lastName, 'i') }, (err, users) => {
+    if (err) return res.status(500).send('Error on the server.');
+
+    return res.status(200).send(toDtos(users));
+  });
+}
