@@ -196,11 +196,88 @@ exports.sentFriendRequests = (req, res, next) => {
   })
 }
 
+/**
+ * POST /user/friends/request/id/accept
+ * Accept friends request
+ */
+exports.acceptFriendRequest = (req, res, next) => {
+  const userId = req.userId;
+  const friendId = req.params.id;
+
+  User.findById(userId, (err, user) => {
+    if (err) return res.status(500).send('Error on the server.');
+    if (!user) return res.status(404).send("User not found");
+
+    if (!user.pendingFriendRequests.includes(friendId)) {
+      return res.status(404).send("Friend request not found");
+    }
+
+    user.pendingFriendRequests = user.pendingFriendRequests.filter(id => id != friendId);
+    user.friends.push(friendId);
+
+    User.findById(friendId, (err, friend) => {
+      if (err) return res.status(500).send('Error on the server.');
+      if (!friend) return res.status(404).send("User not found");
+
+      if (!friend.sentFriendRequests.includes(userId)) {
+        return res.status(404).send("Friend request not found");
+      }
+      
+      friend.sentFriendRequests = friend.sentFriendRequests.filter(id => id != userId);
+      friend.friends.push(userId);
+
+      user.save();
+      friend.save();
+
+      return res.status(200).send("Friend request successfully accepted!");
+
+    })
+  })
+}
+
+/**
+ * POST /user/friends/request/id/decline
+ * Decline friends request
+ */
+exports.declineFriendRequest = (req, res, next) => {
+  const userId = req.userId;
+  const friendId = req.params.id;
+
+  User.findById(userId, (err, user) => {
+    if (err) return res.status(500).send('Error on the server.');
+    if (!user) return res.status(404).send("User not found");
+
+   
+    if (!user.pendingFriendRequests.includes(friendId)) {
+      return res.status(404).send("Friend request not found");
+    }
+
+    user.pendingFriendRequests = user.pendingFriendRequests.filter(id => id != friendId);
+
+    User.findById(friendId, (err, friend) => {
+      if (err) return res.status(500).send('Error on the server.');
+      if (!friend) return res.status(404).send("User not found");
+
+      if (!friend.sentFriendRequests.includes(userId)) {
+        return res.status(404).send("Friend request not found");
+      }
+      
+      friend.sentFriendRequests = friend.sentFriendRequests.filter(id => id != userId);
+
+      user.save();
+      friend.save();
+
+      return res.status(200).send("Friend request successfully declined!");
+
+    })
+  })
+}
+
 function getIds(ids) {
   return ids.map(id => mongoose.Types.ObjectId(id));
 }
 
-async function isMyFriend(friendId, user) {
+function isMyFriend(friendId, user) {
 
   let isFriend = false;
 
@@ -221,6 +298,8 @@ async function isMyFriend(friendId, user) {
       isFriend = true;
     }
   });
+
+  console.log(isFriend);
 
   return isFriend;
 
