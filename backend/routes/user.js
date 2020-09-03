@@ -154,6 +154,48 @@ exports.getFriends = (req, res, next) => {
   })
 }
 
+/**
+ * GET /user/friends/request/pending
+ * Get pending friends request
+ */
+exports.pendingFriendRequests = (req, res, next) => {
+  const userId = req.userId;
+
+  User.findById(userId, (err, user) => {
+    if (err) return res.status(500).send('Error on the server.');
+    if (!user) return res.status(404).send("User not found");
+
+    let ids = getIds(user.pendingFriendRequests);
+
+    User.find({'_id': {$in: ids}}, (err, users) => {
+      if (err) return res.status(500).send('Error on the server.');
+      console.log(users);
+      res.status(200).send(toDtos(users));
+    })
+  })
+}
+
+/**
+ * GET /user/friends/request/sent
+ * Get sent friend requests
+ */
+exports.sentFriendRequests = (req, res, next) => {
+  const userId = req.userId;
+
+  User.findById(userId, (err, user) => {
+    if (err) return res.status(500).send('Error on the server.');
+    if (!user) return res.status(404).send("User not found");
+
+    let ids = getIds(user.sentFriendRequests);
+
+    User.find({'_id': {$in: ids}}, (err, users) => {
+      if (err) return res.status(500).send('Error on the server.');
+      console.log(users);
+      res.status(200).send(toDtos(users));
+    })
+  })
+}
+
 function getIds(ids) {
   return ids.map(id => mongoose.Types.ObjectId(id));
 }

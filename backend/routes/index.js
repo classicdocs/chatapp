@@ -9,4 +9,6 @@ module.exports = (app) => {
   app.get('/api/user/search', verifyToken, userController.searchUsers);
   app.post('/api/user/friends/:id', verifyToken, userController.addFriend);
   app.get('/api/user/friends', verifyToken, userController.getFriends);
+  app.get('/api/user/friends/request/pending', verifyToken, userController.pendingFriendRequests);
+  app.get('/api/user/friends/request/sent', verifyToken, userController.sentFriendRequests);
 }
