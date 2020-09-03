@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 const chalk = require('chalk');
 const config = require('./config');
+var bcrypt = require('bcryptjs');
 var cors = require('cors')
 
 dotenv.config({ path: '.env' });
@@ -23,17 +24,44 @@ mongoose.connection.on('error', (err) => {
   process.exit();
 });
 
-var {User} = require('./models/user');
+var { User } = require('./models/user');
 
 mongoose.connection.once('open', () => {
   console.log("Connected to MongoDB");
 
-  var user = new User({email: "user1@gmail.com", firstName: "firstName1",
-  lastName: "lastName1", password: "123"})
+  var user1 = new User({
+    email: "user1@gmail.com", firstName: "firstName1",
+    lastName: "lastName1",  password: bcrypt.hashSync("123", 8)
+  })
 
-  user.save((err, user) => {
+  user1.save((err, user) => {
     if (err) return console.error(err);
-    console.log("USER " + user.id);
+    console.log("USER " + user1.id);
+
+    var user2 = new User({
+      email: "user2@gmail.com", firstName: "firstName2",
+      lastName: "lastName2", password: bcrypt.hashSync("123", 8), friends: [user1.id]
+    })
+
+    user2.save((err, user) => {
+      if (err) return console.error(err);
+      console.log("USER " + user2.id);
+
+      user1.friends.push(user2.id);
+      user1.save();
+
+    })
+
+  })
+
+  var user3 = new User({
+    email: "user3@gmail.com", firstName: "firstName3",
+    lastName: "lastName3", password: bcrypt.hashSync("123", 8)
+  })
+
+  user3.save((err, user) => {
+    if (err) return console.error(err);
+    console.log("USER " + user3.id);
   })
 })
 

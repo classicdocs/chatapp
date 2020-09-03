@@ -1,6 +1,7 @@
 var jwt = require('jsonwebtoken');
 var bcrypt = require('bcryptjs');
 var config = require('../config');
+const mongoose = require('mongoose');
 const {User, toDtos} = require('../models/user');
 const validator = require('validator');
 const validateParams = require('../util/validator');
@@ -77,9 +78,10 @@ exports.me = (req, res, next) => {
 
 
 /**
- * GEt /user/friends
+ * GET /user/search
+ * Search users
  */
-exports.searchFriends = (req, res, next) => {
+exports.searchUsers = (req, res, next) => {
 
   const firstName = req.query.firstName ? req.query.firstName : "";
   const lastName = req.query.lastName ? req.query.lastName : "";
@@ -89,4 +91,95 @@ exports.searchFriends = (req, res, next) => {
 
     return res.status(200).send(toDtos(users));
   });
+}
+
+
+/**
+ * POST /user/friends/:id
+ * Add friend
+ */
+exports.addFriend = (req, res, next) => {
+
+  const friendId = req.params.id;
+  const userId = req.userId;
+
+
+  if (!friendId) {
+    return res.status(400).send();
+  }
+
+  User.findById(friendId, (err, friend) => {
+    if (err) return res.status(500).send('Error on the server.');
+    if (!friend) return res.status(404).send("User not found");
+
+    User.findById(userId, (err, user) => {
+      if (err) return res.status(500).send('Error on the server.');
+      if (!user) return res.status(404).send("User not found");
+
+      if (isMyFriend(friendId, user)) {
+        return res.status(400).send("User is already your friend");
+      }
+
+      friend.pendingFriendRequests.push(userId);
+      friend.save();
+
+      user.sentFriendRequests.push(friendId);
+      user.save();
+
+      return res.status(200).send("User successfully added");
+
+    })
+  });
+}
+
+/**
+ * GET /user/friends
+ * Get friends
+ */
+exports.getFriends = (req, res, next) => {
+
+  const userId = req.userId;
+
+  User.findById(userId, (err, user) => {
+    if (err) return res.status(500).send('Error on the server.');
+    if (!user) return res.status(404).send("User not found");
+
+    let ids = getIds(user.friends);
+
+    User.find({'_id': {$in: ids}}, (err, users) => {
+      if (err) return res.status(500).send('Error on the server.');
+      console.log(users);
+      res.status(200).send(toDtos(users));
+    })
+  })
+}
+
+function getIds(ids) {
+  return ids.map(id => mongoose.Types.ObjectId(id));
+}
+
+async function isMyFriend(friendId, user) {
+
+  let isFriend = false;
+
+  user.friends.forEach(id => {
+    if (id === friendId) {
+      isFriend = true;
+    }
+  });
+
+  user.pendingFriendRequests.forEach(id => {
+    if (id === friendId) {
+      isFriend = true;
+    }
+  });
+
+  user.sentFriendRequests.forEach(id => {
+    if (id === friendId) {
+      isFriend = true;
+    }
+  });
+
+  return isFriend;
+
 }

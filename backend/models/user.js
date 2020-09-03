@@ -5,7 +5,9 @@ const UserSchema = new mongoose.Schema({
   firstName: String,
   lastName: String,
   password: String,
-  friends: []
+  friends: [],
+  sentFriendRequests: [],
+  pendingFriendRequests: []
 }, {timestamps: true});
 
 
@@ -13,6 +15,7 @@ const User = mongoose.model('User', UserSchema, 'users');
 
 function toDto(user) {
   return {
+    id: user._id,
     email: user.email,
     firstName: user.firstName,
     lastName: user.lastName
