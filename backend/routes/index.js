@@ -16,4 +16,5 @@ module.exports = (app) => {
   app.delete('/api/user/friends/:id', verifyToken, userController.deleteFriend);
   app.get('/api/user/inbox', verifyToken, userController.getInbox);
   app.get('/api/user/inbox/:id', verifyToken, userController.getSingleChat);
+  app.post('/api/user/message', verifyToken, userController.sendMessage);
 }

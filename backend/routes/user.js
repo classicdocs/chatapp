@@ -376,12 +376,57 @@ exports.getSingleChat = (req, res, next) => {
       return res.status(200).send(msgs);
 
     })
+    .sort({createdAt: -1})
     .skip(pageOptions.page * pageOptions.size)
     .limit(pageOptions.limit);
 
   })
 
 }
+
+/**
+ * POST /user/message
+ * Send message
+ */
+exports.sendMessage = (req, res, next) => {
+  const userId = req.userId;
+
+  let {friendId, message} = req.body;
+
+  validateParams({friendId, message}, res);
+
+
+  User.findById(userId, async (err, user) => {
+    if (err) return res.status(500).send('Error on the server.');
+    if (!user) return res.status(404).send("User not found");
+
+    if (!user.inbox.includes(friendId)) {
+      user.inbox.push(friendId);
+    }
+
+    User.findById(friendId, async (err, friend) => {
+      if (err) return res.status(500).send('Error on the server.');
+      if (!user) return res.status(404).send("User not found");
+  
+      if (!friend.inbox.includes(userId)) {
+        friend.inbox.push(userId);
+      }
+  
+
+      user.save();
+      friend.save();
+      
+      let msg = new Message({from: userId, to: friendId, value: message});
+      msg.save();
+  
+      return res.status(200).send(msg);
+    })
+
+
+  })
+
+}
+
 
 function getIds(ids) {
   return ids.map(id => mongoose.Types.ObjectId(id));
