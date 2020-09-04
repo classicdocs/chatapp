@@ -4,8 +4,11 @@ const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 const chalk = require('chalk');
 const config = require('./config');
-var bcrypt = require('bcryptjs');
-var cors = require('cors')
+const bcrypt = require('bcryptjs');
+const cors = require('cors')
+const { User } = require('./models/user');
+const {Message} = require('./models/message');
+
 
 dotenv.config({ path: '.env' });
 
@@ -24,7 +27,6 @@ mongoose.connection.on('error', (err) => {
   process.exit();
 });
 
-var { User } = require('./models/user');
 
 mongoose.connection.once('open', () => {
   console.log("Connected to MongoDB");
@@ -43,12 +45,27 @@ mongoose.connection.once('open', () => {
       lastName: "lastName2", password: bcrypt.hashSync("123", 8), friends: [user1.id]
     })
 
+    user2.inbox.push(user1.id);
+
+
     user2.save((err, user) => {
       if (err) return console.error(err);
       console.log("USER " + user2.id);
 
       user1.friends.push(user2.id);
+      user1.inbox.push(user2.id)
+
       user1.save();
+
+      let msg1 = new Message({from: user1.id, to: user2.id, value: "Cao "});
+      msg1.save();
+      let msg2 = new Message({from: user2.id, to: user1.id, value: "Ejj "});
+      msg2.save();
+      let msg3 = new Message({from: user1.id, to: user2.id, value: "Kako si ?"});
+      msg3.save();
+      let msg4 = new Message({from: user2.id, to: user1.id, value: "Dobro. Ti? "});
+      msg4.save();
+
 
     })
 

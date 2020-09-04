@@ -2,9 +2,10 @@ var jwt = require('jsonwebtoken');
 var bcrypt = require('bcryptjs');
 var config = require('../config');
 const mongoose = require('mongoose');
-const {User, toDtos} = require('../models/user');
+const { User, toDtos, toDto } = require('../models/user');
 const validator = require('validator');
 const validateParams = require('../util/validator');
+const { Message } = require('../models/message');
 
 /**
  * POST /login
@@ -15,14 +16,14 @@ exports.login = (req, res, next) => {
   User.findOne({ email: req.body.email }, (err, user) => {
     if (err) return res.status(500).send('Error on the server.');
     if (!user) return res.status(404).send('No user found.');
-    
+
     let passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
     if (!passwordIsValid) return res.status(401).send({ auth: false, token: null });
-    
+
     var token = jwt.sign({ id: user._id }, config.SECRET, {
       expiresIn: 86400 // expires in 24 hours
     });
-    
+
     res.status(200).send({ auth: true, token: token });
   });
 };
@@ -33,9 +34,9 @@ exports.login = (req, res, next) => {
  */
 exports.register = (req, res, next) => {
 
-  const {email, password, firstName, lastName} = req.body;
-  
-  validateParams({email, password, firstName, lastName}, res);
+  const { email, password, firstName, lastName } = req.body;
+
+  validateParams({ email, password, firstName, lastName }, res);
 
   let validationErrors = [];
   if (!validator.isEmail(email)) validationErrors.push({ msg: 'Please enter a valid email address.' });
@@ -49,11 +50,11 @@ exports.register = (req, res, next) => {
 
   const hashedPassword = bcrypt.hashSync(password, 8);
 
-  User.create({email, firstName, lastName, password : hashedPassword}, (err, user) => {
+  User.create({ email, firstName, lastName, password: hashedPassword }, (err, user) => {
     if (err) return res.status(500).send("There was a problem registering the user.")
     // create a token
     res.status(200).send("Successfully registered!");
-  }); 
+  });
 };
 
 /**
@@ -63,14 +64,14 @@ exports.register = (req, res, next) => {
 exports.me = (req, res, next) => {
   let token = req.headers['x-access-token'] || req.headers['Authorization'];
   if (!token) return res.status(401).send({ auth: false, message: 'No token provided.' });
-  
+
   jwt.verify(token, config.SECRET, (err, decoded) => {
     if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
-    
+
     User.findById(req.userId, { password: 0 }, (err, user) => {
       if (err) return res.status(500).send("There was a problem finding the user.");
       if (!user) return res.status(404).send("No user found.");
-      
+
       res.status(200).send(user);
     });
   });
@@ -146,7 +147,7 @@ exports.getFriends = (req, res, next) => {
 
     let ids = getIds(user.friends);
 
-    User.find({'_id': {$in: ids}}, (err, users) => {
+    User.find({ '_id': { $in: ids } }, (err, users) => {
       if (err) return res.status(500).send('Error on the server.');
       console.log(users);
       res.status(200).send(toDtos(users));
@@ -167,7 +168,7 @@ exports.pendingFriendRequests = (req, res, next) => {
 
     let ids = getIds(user.pendingFriendRequests);
 
-    User.find({'_id': {$in: ids}}, (err, users) => {
+    User.find({ '_id': { $in: ids } }, (err, users) => {
       if (err) return res.status(500).send('Error on the server.');
       console.log(users);
       res.status(200).send(toDtos(users));
@@ -188,7 +189,7 @@ exports.sentFriendRequests = (req, res, next) => {
 
     let ids = getIds(user.sentFriendRequests);
 
-    User.find({'_id': {$in: ids}}, (err, users) => {
+    User.find({ '_id': { $in: ids } }, (err, users) => {
       if (err) return res.status(500).send('Error on the server.');
       console.log(users);
       res.status(200).send(toDtos(users));
@@ -222,7 +223,7 @@ exports.acceptFriendRequest = (req, res, next) => {
       if (!friend.sentFriendRequests.includes(userId)) {
         return res.status(404).send("Friend request not found");
       }
-      
+
       friend.sentFriendRequests = friend.sentFriendRequests.filter(id => id != userId);
       friend.friends.push(userId);
 
@@ -247,7 +248,7 @@ exports.declineFriendRequest = (req, res, next) => {
     if (err) return res.status(500).send('Error on the server.');
     if (!user) return res.status(404).send("User not found");
 
-   
+
     if (!user.pendingFriendRequests.includes(friendId)) {
       return res.status(404).send("Friend request not found");
     }
@@ -261,7 +262,7 @@ exports.declineFriendRequest = (req, res, next) => {
       if (!friend.sentFriendRequests.includes(userId)) {
         return res.status(404).send("Friend request not found");
       }
-      
+
       friend.sentFriendRequests = friend.sentFriendRequests.filter(id => id != userId);
 
       user.save();
@@ -301,7 +302,7 @@ exports.deleteFriend = (req, res, next) => {
       if (!friend.friends.includes(userId)) {
         return res.status(404).send("User is not your friend");
       }
-      
+
       friend.friends = friend.friends.filter(id => id != userId);
 
       user.save();
@@ -311,6 +312,52 @@ exports.deleteFriend = (req, res, next) => {
 
     })
   })
+}
+
+/**
+ * GET /user/inbox
+ * Get user inbox
+ */
+exports.getInbox = (req, res, next) => {
+  const userId = req.userId;
+
+
+
+  User.findById(userId, async (err, user) => {
+    if (err) return res.status(500).send('Error on the server.');
+    if (!user) return res.status(404).send("User not found");
+
+    let ids = getIds(user.inbox);
+
+    let data = [];
+
+    for (const friendId of ids) {
+
+      const friend = await User.findById(friendId, (err) => {
+        if (err) return res.status(500).send('err');
+      });
+
+      if (!friend) {
+        return res.status(404).send("User not found");
+      }
+
+      const msg = await Message.findOne({ $or: [{ from: userId }, { to: userId }] }, (err) =>{ 
+        if (err) return res.status(500).send('err');
+      }).sort({ createdAt: -1 });
+
+      if (!msg) {
+        return;
+      }
+
+      data.push({
+        friend: toDto(friend),
+        msg
+      });
+    }
+
+    return res.status(200).send(data);
+  })
+
 }
 
 function getIds(ids) {

@@ -7,7 +7,8 @@ const UserSchema = new mongoose.Schema({
   password: String,
   friends: [],
   sentFriendRequests: [],
-  pendingFriendRequests: []
+  pendingFriendRequests: [],
+  inbox: []
 }, {timestamps: true});
 
 
@@ -26,5 +27,5 @@ function toDtos(users) {
   return users.map(user => toDto(user));
 }
 
-module.exports = {User, toDtos};
+module.exports = {User, toDtos, toDto};
 
