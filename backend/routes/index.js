@@ -15,4 +15,5 @@ module.exports = (app) => {
   app.put('/api/user/friends/request/:id/decline', verifyToken, userController.declineFriendRequest);
   app.delete('/api/user/friends/:id', verifyToken, userController.deleteFriend);
   app.get('/api/user/inbox', verifyToken, userController.getInbox);
+  app.get('/api/user/inbox/:id', verifyToken, userController.getSingleChat);
 }

@@ -149,7 +149,6 @@ exports.getFriends = (req, res, next) => {
 
     User.find({ '_id': { $in: ids } }, (err, users) => {
       if (err) return res.status(500).send('Error on the server.');
-      console.log(users);
       res.status(200).send(toDtos(users));
     })
   })
@@ -170,7 +169,6 @@ exports.pendingFriendRequests = (req, res, next) => {
 
     User.find({ '_id': { $in: ids } }, (err, users) => {
       if (err) return res.status(500).send('Error on the server.');
-      console.log(users);
       res.status(200).send(toDtos(users));
     })
   })
@@ -191,7 +189,6 @@ exports.sentFriendRequests = (req, res, next) => {
 
     User.find({ '_id': { $in: ids } }, (err, users) => {
       if (err) return res.status(500).send('Error on the server.');
-      console.log(users);
       res.status(200).send(toDtos(users));
     })
   })
@@ -286,9 +283,6 @@ exports.deleteFriend = (req, res, next) => {
     if (err) return res.status(500).send('Error on the server.');
     if (!user) return res.status(404).send("User not found");
 
-    console.log(user.friends);
-    console.log(friendId);
-
     if (!user.friends.includes(friendId)) {
       return res.status(404).send("User is not your friend");
     }
@@ -321,8 +315,6 @@ exports.deleteFriend = (req, res, next) => {
 exports.getInbox = (req, res, next) => {
   const userId = req.userId;
 
-
-
   User.findById(userId, async (err, user) => {
     if (err) return res.status(500).send('Error on the server.');
     if (!user) return res.status(404).send("User not found");
@@ -341,7 +333,7 @@ exports.getInbox = (req, res, next) => {
         return res.status(404).send("User not found");
       }
 
-      const msg = await Message.findOne({ $or: [{ from: userId }, { to: userId }] }, (err) =>{ 
+      const msg = await Message.findOne({ $or: [{ from: userId }, { to: userId }] }, (err) => {
         if (err) return res.status(500).send('err');
       }).sort({ createdAt: -1 });
 
@@ -356,6 +348,37 @@ exports.getInbox = (req, res, next) => {
     }
 
     return res.status(200).send(data);
+  })
+
+}
+
+/**
+ * GET /user/inbox/id
+ * Get user chat with friend
+ */
+exports.getSingleChat = (req, res, next) => {
+  const userId = req.userId;
+  const friendId = req.params.id;
+
+  const pageOptions = {
+    page: parseInt(req.query.page, 10) || 0,
+    size: parseInt(req.query.size, 10) || 10
+  }
+
+  User.findById(userId, async (err, user) => {
+    if (err) return res.status(500).send('Error on the server.');
+    if (!user) return res.status(404).send("User not found");
+
+
+    Message.find({ $or: [{ from: userId, to: friendId }, { from: friendId, to: userId }] }, (err, msgs) => {
+      if (err) return res.status(500).send("Error on the server.");
+
+      return res.status(200).send(msgs);
+
+    })
+    .skip(pageOptions.page * pageOptions.size)
+    .limit(pageOptions.limit);
+
   })
 
 }
@@ -385,8 +408,6 @@ function isMyFriend(friendId, user) {
       isFriend = true;
     }
   });
-
-  console.log(isFriend);
 
   return isFriend;
 
