@@ -273,6 +273,46 @@ exports.declineFriendRequest = (req, res, next) => {
   })
 }
 
+
+/**
+ *  DELETE /user/friend/id
+ */
+exports.deleteFriend = (req, res, next) => {
+  const userId = req.userId;
+  const friendId = req.params.id;
+
+  User.findById(userId, (err, user) => {
+    if (err) return res.status(500).send('Error on the server.');
+    if (!user) return res.status(404).send("User not found");
+
+    console.log(user.friends);
+    console.log(friendId);
+
+    if (!user.friends.includes(friendId)) {
+      return res.status(404).send("User is not your friend");
+    }
+
+    user.friends = user.friends.filter(id => id != friendId);
+
+    User.findById(friendId, (err, friend) => {
+      if (err) return res.status(500).send('Error on the server.');
+      if (!friend) return res.status(404).send("User not found");
+
+      if (!friend.friends.includes(userId)) {
+        return res.status(404).send("User is not your friend");
+      }
+      
+      friend.friends = friend.friends.filter(id => id != userId);
+
+      user.save();
+      friend.save();
+
+      return res.status(200).send("Friend successfully removed!");
+
+    })
+  })
+}
+
 function getIds(ids) {
   return ids.map(id => mongoose.Types.ObjectId(id));
 }

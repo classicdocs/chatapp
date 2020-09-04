@@ -13,4 +13,5 @@ module.exports = (app) => {
   app.get('/api/user/friends/request/sent', verifyToken, userController.sentFriendRequests);
   app.post('/api/user/friends/request/:id/accept', verifyToken, userController.acceptFriendRequest);
   app.post('/api/user/friends/request/:id/decline', verifyToken, userController.declineFriendRequest);
+  app.delete('/api/user/friends/:id', verifyToken, userController.deleteFriend);
 }
