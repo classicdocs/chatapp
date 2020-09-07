@@ -1,20 +1,38 @@
 const { User, toDtos } = require('../models/user');
-const {getIds} = require('../util/helper');
+const { getIds } = require('../util/helper');
 
 /**
- * GET /user/search
+ * GET /friends/search
  * Search users
  */
 exports.searchUsers = (req, res, next) => {
 
-  const firstName = req.query.firstName ? req.query.firstName : "";
-  const lastName = req.query.lastName ? req.query.lastName : "";
+  const userId = req.userId;
+  const searchParam = req.query.searchParam ? req.query.searchParam : "";
 
-  User.find({ firstName: new RegExp(firstName, 'i'), lastName: new RegExp(lastName, 'i') }, (err, users) => {
+
+  User.findById(userId, (err, user) => {
     if (err) return res.status(500).send('Error on the server.');
+    if (!user) return res.status(404).send("User not found");
 
-    return res.status(200).send(toDtos(users));
-  });
+    User.find({$or: [{ firstName: new RegExp(searchParam, 'i')}, {lastName: new RegExp(searchParam, 'i') }]}, (err, users) => {
+      if (err) return res.status(500).send('Error on the server.');
+
+
+      let result = [];
+
+      users.forEach(friend => {
+          if (!isMyFriend(friend._id, user) && friend._id != userId) {
+            result.push(friend);
+          }
+      })
+
+      return res.status(200).send(toDtos(result));
+    });
+  })
+
+
+
 }
 
 
@@ -237,19 +255,19 @@ function isMyFriend(friendId, user) {
   let isFriend = false;
 
   user.friends.forEach(id => {
-    if (id === friendId) {
+    if (id == friendId) {
       isFriend = true;
     }
   });
 
   user.pendingFriendRequests.forEach(id => {
-    if (id === friendId) {
+    if (id == friendId) {
       isFriend = true;
     }
   });
 
   user.sentFriendRequests.forEach(id => {
-    if (id === friendId) {
+    if (id == friendId) {
       isFriend = true;
     }
   });
