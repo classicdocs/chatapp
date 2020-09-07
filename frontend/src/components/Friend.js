@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import {Button} from "@material-ui/core";
-import { deleteFriend } from '../services/friendService';
+import { Button } from "@material-ui/core";
+import { deleteFriend, addFriend } from '../services/friendService';
+import FriendsType from "../constants/FriendsType";
 
 export default class Friend extends Component {
 
@@ -8,13 +9,25 @@ export default class Friend extends Component {
     super(props);
 
     this.state = {
-      friend: this.props.friend ? this.props.friend : null
+      friend: this.props.friend ? this.props.friend : null,
+      type: this.props.type
     }
 
   }
 
   removeFriend() {
     deleteFriend(this.state.friend.id)
+      .then(res => {
+        if (!res.ok) {
+          return;
+        }
+
+        this.props.fetchData();
+      })
+  }
+
+  addFriend() {
+    addFriend(this.state.friend.id)
     .then(res => {
       if (!res.ok) {
         return;
@@ -23,7 +36,6 @@ export default class Friend extends Component {
       this.props.fetchData();
     })
   }
-
 
   render() {
 
@@ -34,7 +46,12 @@ export default class Friend extends Component {
     return (
       <div className="friend-container">
         {`${this.state.friend.firstName} ${this.state.friend.lastName}`}
-        <Button onClick={() => this.removeFriend()}>Remove</Button>
+        {this.state.type === FriendsType.ADD &&
+          <Button onClick={() => this.addFriend()}>Add</Button>
+        }
+        {this.state.type === FriendsType.REMOVE &&
+          <Button onClick={() => this.removeFriend()}>Remove</Button>
+        }
       </div>
     )
   }

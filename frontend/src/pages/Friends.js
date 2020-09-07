@@ -4,10 +4,11 @@ import { makeStyles } from '@material-ui/core/styles';
 import TabPanel from "../components/TabPanel";
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import {getFriends, getSentRequests, getPendingRequests} from "../services/friendService";
+import {getFriends, getSentRequests, getPendingRequests, searchUsers} from "../services/friendService";
 import Friend from '../components/Friend';
 import Request from "../components/Request";
 import RequestTypes from "../constants/RequestTypes";
+import FriendsType from "../constants/FriendsType";
 
 function a11yProps(index) {
   return {
@@ -26,15 +27,22 @@ export default class Friends extends Component {
       value: 0,
       friends: [],
       sentRequests: [],
-      pendingRequests: []
+      pendingRequests: [],
+      usersFromSearch: []
     }
   }
 
   componentDidMount() {
 
-    this.getFriendsList();
     this.getSentRequests();
     this.getPendingRequests();
+
+    if (this.state.value == 0) {
+      this.getFriendsList();
+
+    } else if (this.state.value == 1) {
+      this.search();
+    }
   }
   
 
@@ -50,7 +58,15 @@ export default class Friends extends Component {
   }
 
   search() {
-    console.log("search");
+    searchUsers(this.state.searchParam)
+    .then(res => {
+      if (!res.ok) {
+        return;
+      }
+      
+      this.setState({usersFromSearch: res.data});
+
+    })
   }
 
   getFriendsList() {
@@ -97,12 +113,19 @@ export default class Friends extends Component {
       this.getFriendsList();
     } else if (newValue == 1) {
       // search
+      this.search();
     }
   };
 
+  renderUsers() {
+    return this.state.usersFromSearch.map(user => {
+      return <Friend friend={user} key={user.id} type={FriendsType.ADD} fetchData={() => this.componentDidMount()}/>;
+    });
+  }
+
   renderFriends() {
     return this.state.friends.map(friend => {
-      return <Friend friend={friend} key={friend.id} fetchData={() => this.componentDidMount()}/>;
+      return <Friend friend={friend} key={friend.id} type={FriendsType.REMOVE} fetchData={() => this.componentDidMount()}/>;
     });
   }
 
@@ -141,7 +164,7 @@ export default class Friends extends Component {
                 variant="outlined"
                 placeholder="Search friends"
               ></TextField>
-              a
+              {this.renderUsers()}
             </TabPanel>
 
           </div>
