@@ -1,4 +1,6 @@
 const userController = require('./user');
+const friendController = require('./friend');
+const messageController = require('./message');
 const verifyToken =  require('../config/auth');
 
 module.exports = (app) => {
@@ -6,15 +8,15 @@ module.exports = (app) => {
   app.post('/api/register', userController.register);
   app.post('/api/login', userController.login);
   app.get('/api/me', verifyToken, userController.me);
-  app.get('/api/user/search', verifyToken, userController.searchUsers);
-  app.post('/api/user/friends/:id', verifyToken, userController.addFriend);
-  app.get('/api/user/friends', verifyToken, userController.getFriends);
-  app.get('/api/user/friends/request/pending', verifyToken, userController.pendingFriendRequests);
-  app.get('/api/user/friends/request/sent', verifyToken, userController.sentFriendRequests);
-  app.put('/api/user/friends/request/:id/accept', verifyToken, userController.acceptFriendRequest);
-  app.put('/api/user/friends/request/:id/decline', verifyToken, userController.declineFriendRequest);
-  app.delete('/api/user/friends/:id', verifyToken, userController.deleteFriend);
-  app.get('/api/user/inbox', verifyToken, userController.getInbox);
-  app.get('/api/user/inbox/:id', verifyToken, userController.getSingleChat);
-  app.post('/api/user/message', verifyToken, userController.sendMessage);
+  app.get('/api/friends/search', verifyToken, friendController.searchUsers);
+  app.post('/api/friends/:id', verifyToken, friendController.addFriend);
+  app.get('/api/friends', verifyToken, friendController.getFriends);
+  app.get('/api/friends/request/pending', verifyToken, friendController.pendingFriendRequests);
+  app.get('/api/friends/request/sent', verifyToken, friendController.sentFriendRequests);
+  app.put('/api/friends/request/:id/accept', verifyToken, friendController.acceptFriendRequest);
+  app.put('/api/friends/request/:id/decline', verifyToken, friendController.declineFriendRequest);
+  app.delete('/api/friends/:id', verifyToken, friendController.deleteFriend);
+  app.get('/api/inbox', verifyToken, messageController.getInbox);
+  app.get('/api/inbox/:id', verifyToken, messageController.getSingleChat);
+  app.post('/api/inbox/message', verifyToken, messageController.sendMessage);
 }
