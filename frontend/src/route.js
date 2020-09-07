@@ -1,6 +1,7 @@
 import React from "react";
 import Home from "./pages/Home";
 import Welcome from "./pages/Welcome";
+import Friends from "./pages/Friends";
 import {isUserLoggedIn} from "./base/Auth";
 import { Route } from "react-router-dom";
 
@@ -14,6 +15,11 @@ let ROUTES = {
   Home: {
     path: "/home",
     component: <Home/>,
+    auth: true
+  },
+  Friends: {
+    path: "/friends",
+    component: <Friends/>,
     auth: true
   }
 }

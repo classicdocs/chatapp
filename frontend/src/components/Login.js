@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import LoginForm from "../forms/LoginForm";
 import { login } from "../services/userService";
 import history from "../history";
+import connect from "react-redux/es/connect/connect";
+import {loadUser} from "../actions/AuthActions";
 
 class Login extends Component {
 
@@ -25,6 +27,7 @@ class Login extends Component {
         alert("Wrong credentials");
         return;
       }
+      this.props.loadUser()
       history.push("/home");
     })
     .catch((err) => {
@@ -55,4 +58,4 @@ class Login extends Component {
   }
 }
 
-export default Login;
+export default connect(null, {loadUser})(Login);

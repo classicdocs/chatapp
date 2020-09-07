@@ -9,7 +9,8 @@ export function setUserToLocalStorage(user) {
 }
 
 export function getToken() {
-  return localStorage.getItem("token");
+  let token = localStorage.getItem("token"); 
+  return token ? token : null;
 }
 
 export function setTokenToLocalStorage(token) {

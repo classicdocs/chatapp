@@ -1,0 +1,15 @@
+.message-container {
+  background-color: $primaryColor;
+  color: white;
+  width: fit-content;
+  margin: 2px;
+  padding: 1px 10px 1px 10px;
+  border-radius: 30px 30px 30px 30px;
+  min-width: 75px;
+  text-align: center;
+  align-self: flex-start;
+  
+  &.my-msg {
+    align-self: flex-end;
+  }
+}

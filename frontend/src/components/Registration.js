@@ -33,18 +33,6 @@ export default class Registration extends Component {
     .catch((err) => {
       console.log(err);
     } )
-    // login(this.state.formData.email, this.state.formData.password)
-    // .then((res) => {
-    //   if (!res.ok) {
-    //     alert("Wrong credentials");
-    //     return;
-    //   }
-    //   history.push("/home");
-    // })
-    // .catch((err) => {
-    //   console.log(err);
-    // });
-
   }
 
   onChange = (event) => {

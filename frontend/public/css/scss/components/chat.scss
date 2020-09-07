@@ -1,0 +1,53 @@
+#chat-container {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  position: relative;
+}
+
+#chat-header {
+  height: 50px;
+  background-color: white;
+  display: flex;
+  flex-grow: 1;
+  padding-left: 20px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+#chat-content {
+  height: 100%;
+  margin-bottom: 50px;
+  padding:10px;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+
+#chat-bottom {
+  position: absolute;
+  bottom: 0;
+  height: 70px;
+  width: 100%;
+  background-color: white;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  padding-left: 20px;
+  padding-right: 20px;
+  display: flex;
+  padding-top: 10px;
+  padding-bottom: 10px;
+
+  .MuiOutlinedInput-input {
+    padding: 10px !important;
+
+    background-color: whitesmoke;
+  }
+
+  #send-button {
+    background-color: $primaryColor;
+    color: white;
+    margin-left: 20px;
+    
+    border-radius: 20px;
+
+  }
+}

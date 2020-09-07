@@ -1,5 +1,25 @@
 html {
   background: grey;
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  margin: 0px;
+  height: 100%;
+}
+
+#app {
+  width: 100%;
+  height: 100%;
+}
+
+#root {
+  height: 100%;
+}
+
+.tab-panel {
+  width: 100%;
 }
 
 #login-card-content {
@@ -9,12 +29,160 @@ html {
   flex-direction: column;
 }
 
+#header-toolbar {
+  height: 50px;
+  background-color: #3f51b5;
+}
+
 .MuiFormControl-root.MuiTextField-root {
   margin-top: 8px !important;
   margin-bottom: 4px !important;
 }
 .MuiFormControl-root .MuiInputBase-input {
   height: 15px !important;
+}
+
+.drawer-root {
+  display: flex;
+  height: 100%;
+}
+
+#drawer {
+  width: 240px;
+  flex-shrink: 0;
+  z-index: 10;
+}
+
+.drawer-container {
+  overflow: auto;
+  width: 240px;
+}
+
+.main-content {
+  flex-grow: 1;
+  display: flex;
+  height: calc(100% - 64x);
+  margin-top: 64px;
+  background-color: white;
+  padding: 0px;
+}
+
+.inbox-element {
+  width: 100%;
+}
+
+.-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.12);
+  border-radius: 10px;
+  background-color: #F5F5F5;
+}
+
+#chat-container {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  position: relative;
+}
+
+#chat-header {
+  height: 50px;
+  background-color: white;
+  display: flex;
+  flex-grow: 1;
+  padding-left: 20px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+#chat-content {
+  height: 100%;
+  margin-bottom: 50px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+
+#chat-bottom {
+  position: absolute;
+  bottom: 0;
+  height: 70px;
+  width: 100%;
+  background-color: white;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  padding-left: 20px;
+  padding-right: 20px;
+  display: flex;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+#chat-bottom .MuiOutlinedInput-input {
+  padding: 10px !important;
+  background-color: whitesmoke;
+}
+#chat-bottom #send-button {
+  background-color: #3f51b5;
+  color: white;
+  margin-left: 20px;
+  border-radius: 20px;
+}
+
+.message-container {
+  background-color: #3f51b5;
+  color: white;
+  width: fit-content;
+  margin: 2px;
+  padding: 1px 10px 1px 10px;
+  border-radius: 30px 30px 30px 30px;
+  min-width: 75px;
+  text-align: center;
+  align-self: flex-start;
+}
+.message-container.my-msg {
+  align-self: flex-end;
+}
+
+#friends-page {
+  display: flex;
+  height: 100%;
+}
+
+#friends-content {
+  margin-top: 64px;
+  display: flex;
+  flex-grow: 1;
+}
+
+#friends-left-container {
+  border-right: 1px solid rgba(0, 0, 0, 0.12);
+  background-color: white;
+  width: 65%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#friends-right-container {
+  border-left: 1px solid rgba(0, 0, 0, 0.12);
+  background-color: white;
+  width: 35%;
+}
+
+.friend-container {
+  padding: 10px;
+  display: flex;
+  background-color: whitesmoke;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  justify-content: space-between;
+  align-items: center;
+}
+
+.request-container {
+  display: flex;
+  padding: 10px;
+  background-color: whitesmoke;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  justify-content: space-between;
+  align-items: center;
 }
 
 /*# sourceMappingURL=style.css.map */
