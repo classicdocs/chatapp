@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import {isIdFromUser} from "../util/helper";
+import {Avatar} from "@material-ui/core";
 
 export default class InboxElement extends Component {
 
@@ -9,6 +10,7 @@ export default class InboxElement extends Component {
     this.state = {
       firstName: props.firstName ? props.firstName : "",
       lastName: props.lastName ? props.lastName : "",
+      profileImageUrl: props.profileImageUrl ? props.profileImageUrl : "",
       message: props.message ? props.message : null,
       selected: false
     };
@@ -36,8 +38,11 @@ export default class InboxElement extends Component {
 
     return (
       <div className="inbox-element" onClick={() => this.props.onSelect()}>
+        <Avatar src={this.state.profileImageUrl}></Avatar>
+        <div>
         <h4>{this.state.firstName} {this.state.lastName}</h4>
         {this.renderMessage()}
+        </div>
       </div>
     )
   }

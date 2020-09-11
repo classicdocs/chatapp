@@ -3,6 +3,7 @@ import { Button } from "@material-ui/core";
 import { deleteFriend, addFriend } from '../services/friendService';
 import FriendsType from "../constants/FriendsType";
 import history from '../history';
+import { Avatar } from '@material-ui/core';
 
 export default class Friend extends Component {
 
@@ -50,7 +51,10 @@ export default class Friend extends Component {
 
     return (
       <div className="friend-container">
-        {`${this.state.friend.firstName} ${this.state.friend.lastName}`}
+        <div className="friend-container-info">
+          <Avatar src={this.state.friend.profileImageUrl}></Avatar>
+          {`${this.state.friend.firstName} ${this.state.friend.lastName}`}
+        </div>
         {this.state.type === FriendsType.ADD &&
           <Button onClick={() => this.addFriend()}>Add</Button>
         }

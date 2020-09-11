@@ -15,6 +15,7 @@ import Chat from '../components/Chat';
 import history from "../history";
 import { withRouter } from 'react-router-dom'
 import { getFriend } from '../services/friendService';
+import { Button } from "@material-ui/core";
 
 class Home extends Component {
 
@@ -26,7 +27,7 @@ class Home extends Component {
 
   componentDidMount() {
 
-    this.setState({friendIdPathParam: this.props.match.params.friendId});
+    this.setState({ friendIdPathParam: this.props.match.params.friendId });
 
     this.getInbox();
   }
@@ -39,7 +40,7 @@ class Home extends Component {
           if (this.state.friendIdPathParam == undefined) {
             return;
           }
-        
+
           let userAlreadyExistInInbox = false;
 
           this.state.inbox.forEach(el => {
@@ -50,14 +51,14 @@ class Home extends Component {
           })
 
           if (!this.state.selectedInbox && !userAlreadyExistInInbox) {
-              // get info of user
-              getFriend(this.state.friendIdPathParam)
+            // get info of user
+            getFriend(this.state.friendIdPathParam)
               .then(res => {
                 if (!res.ok) {
                   return;
                 }
 
-                this.setState({inbox: [...this.state.inbox, {friend: res.data}], selectedInbox: {friend: res.data}}, () => console.log(this.state));
+                this.setState({ inbox: [...this.state.inbox, { friend: res.data }], selectedInbox: { friend: res.data } }, () => console.log(this.state));
               })
           }
 
@@ -85,6 +86,7 @@ class Home extends Component {
           <InboxElement
             firstName={el.friend.firstName}
             lastName={el.friend.lastName}
+            profileImageUrl={el.friend.profileImageUrl}
             message={el.msg}
             onSelect={() => this.onInboxElementSelect(el)}
           ></InboxElement>
@@ -108,12 +110,13 @@ class Home extends Component {
           </div>
         </Drawer>
         <div className="main-content">
-          {this.state.selectedInbox && 
-          <Chat
-            firstName={this.state.selectedInbox.friend.firstName}
-            lastName={this.state.selectedInbox.friend.lastName}
-            friendId={this.state.selectedInbox.friend.id}
-          ></Chat>}
+          {this.state.selectedInbox &&
+            <Chat
+              firstName={this.state.selectedInbox.friend.firstName}
+              lastName={this.state.selectedInbox.friend.lastName}
+              profileImageUrl={this.state.selectedInbox.friend.profileImageUrl}
+              friendId={this.state.selectedInbox.friend.id}
+            ></Chat>}
         </div>
       </div>
     );

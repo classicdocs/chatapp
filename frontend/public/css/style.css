@@ -22,6 +22,10 @@ body {
   width: 100%;
 }
 
+.MuiAvatar-root {
+  margin: 10px;
+}
+
 #login-card-content {
   display: flex;
   align-items: center;
@@ -48,14 +52,21 @@ body {
 }
 
 #drawer {
-  width: 240px;
+  width: 400px;
   flex-shrink: 0;
   z-index: 10;
 }
 
 .drawer-container {
   overflow: auto;
-  width: 240px;
+  width: 400px;
+}
+.drawer-container .MuiList-root {
+  padding: 0px;
+}
+.drawer-container .MuiList-root .MuiButtonBase-root.MuiListItem-root {
+  padding: 0px 10px 0px 0px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
 }
 
 .main-content {
@@ -69,6 +80,8 @@ body {
 
 .inbox-element {
   width: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .-webkit-scrollbar-track {
@@ -80,20 +93,30 @@ body {
 #chat-container {
   display: flex;
   flex-grow: 1;
-  flex-direction: column;
-  position: relative;
 }
 
-#chat-header {
-  height: 50px;
-  background-color: white;
+#chat-profile-info {
+  width: 30%;
   display: flex;
-  flex-grow: 1;
-  padding-left: 20px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  flex-direction: column;
+  align-items: center;
+}
+
+#chat-profile-image {
+  width: 200px;
+  height: 200px;
 }
 
 #chat-content {
+  position: relative;
+  display: flex;
+  flex-grow: 1;
+  width: 70%;
+  border-right: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+#chat-messages {
+  width: 100%;
   height: 100%;
   margin-bottom: 50px;
   padding: 10px;
@@ -139,6 +162,7 @@ body {
 }
 .message-container.my-msg {
   align-self: flex-end;
+  background-color: #3fb5a3;
 }
 
 #friends-page {
@@ -165,6 +189,7 @@ body {
   border-left: 1px solid rgba(0, 0, 0, 0.12);
   background-color: white;
   width: 35%;
+  padding-left: 10px;
 }
 
 .friend-container {
@@ -176,12 +201,43 @@ body {
   align-items: center;
 }
 
+.friend-container-info {
+  display: flex;
+  align-items: center;
+}
+
 .request-container {
+  margin: 33px 10px 0px 0px;
   display: flex;
   padding: 10px;
   background-color: whitesmoke;
   border: 1px solid rgba(0, 0, 0, 0.12);
   justify-content: space-between;
+  align-items: center;
+}
+
+#profile-page {
+  display: flex;
+  margin-top: 64px;
+  flex-grow: 1;
+  height: 100%;
+  background-color: white;
+  align-items: center;
+  flex-direction: column;
+}
+
+#profile-image {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  border: 5px solid #3f51b5;
+}
+
+#user-profile-info {
+  display: flex;
+  flex-direction: column;
   align-items: center;
 }
 

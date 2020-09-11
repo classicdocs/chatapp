@@ -2,6 +2,7 @@ import React from "react";
 import Home from "./pages/Home";
 import Welcome from "./pages/Welcome";
 import Friends from "./pages/Friends";
+import Profile from "./pages/Profile";
 import {isUserLoggedIn} from "./base/Auth";
 import { Route } from "react-router-dom";
 
@@ -25,6 +26,11 @@ let ROUTES = {
   Friends: {
     path: "/friends",
     component: <Friends/>,
+    auth: true
+  },
+  Profile: {
+    path: "/profile",
+    component: <Profile/>,
     auth: true
   }
 }

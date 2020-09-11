@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import {getMessages, sendMessage} from "../services/messageService";
+import { getMessages, sendMessage } from "../services/messageService";
 import Message from "../components/Message";
-import { TextField, Button } from '@material-ui/core';
+import { TextField, Button, Avatar } from '@material-ui/core';
 
 export default class Chat extends Component {
 
@@ -11,7 +11,8 @@ export default class Chat extends Component {
     this.state = {
       firstName: props.firstName ? props.firstName : "",
       lastName: props.lastName ? props.lastName : "",
-      friendId: props.friendId ? props.friendId: null,
+      friendId: props.friendId ? props.friendId : null,
+      profileImageUrl: props.profileImageUrl ? props.profileImageUrl : "",
       messages: [],
       enterMessageField: ""
     }
@@ -28,20 +29,20 @@ export default class Chat extends Component {
     }
 
     getMessages(this.state.friendId)
-    .then(res => {
-      this.setState({messages: res.data});
+      .then(res => {
+        this.setState({ messages: res.data });
 
-    })
-    .catch(err => {
-      console.log(err);
-    })
+      })
+      .catch(err => {
+        console.log(err);
+      })
   }
 
   sendMessage() {
-      // send message
+    // send message
 
-      this.setState({enterMessageField: ""})
-      sendMessage(this.state.friendId, this.state.enterMessageField)
+    this.setState({ enterMessageField: "" })
+    sendMessage(this.state.friendId, this.state.enterMessageField)
       .then(res => {
         console.log(res.data);
         this.fetchMessages();
@@ -57,9 +58,9 @@ export default class Chat extends Component {
 
   onKeyDown(e) {
     // enter pressed
-    if(e.keyCode == 13){
+    if (e.keyCode == 13) {
       this.sendMessage();
-   }  
+    }
   }
 
   renderMessages() {
@@ -72,25 +73,31 @@ export default class Chat extends Component {
   render() {
     return (
       <div id="chat-container">
-        <div id="chat-header">
+        <div id="chat-content">
+          <div id="chat-messages"> {this.renderMessages()}</div>
+          <div id="chat-bottom">
+
+            <TextField
+              id="friends-search-field"
+              fullWidth
+              value={this.state.enterMessageField}
+              onChange={(e) => this.onEnterMessageFieldChange(e)}
+              onKeyDown={(e) => this.onKeyDown(e)}
+              variant="outlined"
+              placeholder="Enter a message"
+            ></TextField>
+
+            <Button id="send-button" size="large" onClick={() => this.sendMessage()}>Send</Button>
+
+          </div>
+        </div>
+
+        <div id="chat-profile-info">
+          <Avatar id="chat-profile-image" src={this.state.profileImageUrl}></Avatar>
           <h4>{`${this.state.firstName} ${this.state.lastName}`}</h4>
         </div>
-        <div id="chat-content"> {this.renderMessages()}</div>
-        <div id="chat-bottom">
 
-          <TextField
-            id="friends-search-field"
-            fullWidth
-            value={this.state.enterMessageField}
-            onChange={(e) => this.onEnterMessageFieldChange(e)}
-            onKeyDown={(e) => this.onKeyDown(e)}
-            variant="outlined"
-            placeholder="Enter a message"
-          ></TextField>
 
-          <Button id="send-button" size="large" onClick={() => this.sendMessage()}>Send</Button>
-
-        </div>
       </div>
     )
   }

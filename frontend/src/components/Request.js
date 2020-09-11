@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import RequestTypes from "../constants/RequestTypes";
-import { Button } from "@material-ui/core";
+import { Button, Avatar } from "@material-ui/core";
 import {acceptRequest, declineRequst} from "../services/friendService";
 
 
@@ -46,7 +46,10 @@ export default class Request extends Component {
 
     return (
       <div className="request-container">
+        <div className="friend-container-info">
+        <Avatar src={this.state.request.profileImageUrl}></Avatar>
         <p>{`${this.state.request.firstName} ${this.state.request.lastName}`}</p>
+        </div>
         <div>
           {this.state.type == RequestTypes.PENDING && <Button onClick={() => this.acceptRequest()}>Accept</Button>
           }

@@ -22,6 +22,7 @@
   border-left: 1px solid $borderColor; 
   background-color: white;
   width: 35%;
+  padding-left: 10px;
 }
 
 .friend-container {
@@ -33,7 +34,13 @@
   align-items: center;
 }
 
+.friend-container-info {
+  display: flex;
+  align-items: center;
+}
+
 .request-container {
+  margin: 33px 10px 0px 0px;
   display: flex;
   padding: 10px;
   background-color: whitesmoke;

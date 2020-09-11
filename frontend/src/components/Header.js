@@ -10,7 +10,6 @@ import {logout} from "../actions/AuthActions";
 
 class Header extends Component {
 
-
   logout() {
     clearUserData();
     this.props.logout();
@@ -32,6 +31,7 @@ class Header extends Component {
             </Typography>
             {this.props.user && <Button color="inherit" onClick={() => this.navigate("/home")}>Inbox</Button>}
             {this.props.user && <Button color="inherit" onClick={() => this.navigate("/friends")}>Friends</Button>}
+            {this.props.user && <Button color="inherit" onClick={() => this.navigate("/profile")}>Profile</Button>}
             {this.props.user && <Button color="inherit" onClick={() => this.logout()}>Logout</Button>}
           </Toolbar>
         </AppBar>

@@ -8,6 +8,12 @@ export function setUserToLocalStorage(user) {
   localStorage.setItem("user", JSON.stringify(user));
 }
 
+export function updateProfileImage(imageUrl) {
+  let user = getUserFromLocalStorage();
+  user.profileImageUrl = imageUrl;
+  setUserToLocalStorage(user);
+}
+
 export function getToken() {
   let token = localStorage.getItem("token"); 
   return token ? token : null;

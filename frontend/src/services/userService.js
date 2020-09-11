@@ -5,7 +5,8 @@ import {request} from "../base/Http";
 const URL = {
   login: "/login",
   register: "/register",
-  me: "/me"
+  me: "/me",
+  uploadProfileImage: "/upload"
 }
 
 export async function login(email, password) {
@@ -34,4 +35,8 @@ export async function login(email, password) {
 
 export async function register(data) {
   return await request(URL.register, data, HttpMethod.POST);
+}
+
+export async function uploadProfileImage(data) {
+  return await request(URL.uploadProfileImage, data, HttpMethod.POST);
 }

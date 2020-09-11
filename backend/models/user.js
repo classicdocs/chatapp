@@ -5,6 +5,7 @@ const UserSchema = new mongoose.Schema({
   firstName: String,
   lastName: String,
   password: String,
+  profileImageUrl: String,
   friends: [],
   sentFriendRequests: [],
   pendingFriendRequests: [],
@@ -19,7 +20,8 @@ function toDto(user) {
     id: user._id,
     email: user.email,
     firstName: user.firstName,
-    lastName: user.lastName
+    lastName: user.lastName,
+    profileImageUrl: user.profileImageUrl
   }
 }
 

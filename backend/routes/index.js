@@ -1,11 +1,15 @@
 const userController = require('./user');
 const friendController = require('./friend');
 const messageController = require('./message');
+const fileController = require('./file');
 const verifyToken =  require('../config/auth');
+
+const multer = require('multer');
+const upload = multer();
+
 
 module.exports = (app) => {
 
-  app.post('/api/register', userController.register);
   app.post('/api/login', userController.login);
   app.get('/api/me', verifyToken, userController.me);
   app.get('/api/friends/search', verifyToken, friendController.searchUsers);
@@ -20,4 +24,5 @@ module.exports = (app) => {
   app.get('/api/inbox', verifyToken, messageController.getInbox);
   app.get('/api/inbox/:id', verifyToken, messageController.getSingleChat);
   app.post('/api/inbox/message', verifyToken, messageController.sendMessage);
+  app.post('/api/upload', upload.single('file'), verifyToken, fileController.uploadFile);
 }

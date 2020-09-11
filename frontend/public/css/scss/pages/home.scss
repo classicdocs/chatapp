@@ -6,14 +6,25 @@ $drawerWidth: 240;
 }
 
 #drawer {
-  width: 240px;
+  width: 400px;
   flex-shrink: 0;
   z-index: 10;
 }
 
 .drawer-container {
   overflow: auto;
-  width: 240px;
+  width: 400px;
+
+  .MuiList-root  {
+    padding: 0px;
+
+    .MuiButtonBase-root {
+      &.MuiListItem-root {
+        padding: 0px 10px 0px 0px;
+        border-bottom: 1px solid $borderColor;
+      }   
+    }
+  }
 }
 
 .main-content {
@@ -27,7 +38,8 @@ $drawerWidth: 240;
 
 .inbox-element {
   width: 100%;
-
+  display: flex;
+  align-items: center;
 }
 
 .-webkit-scrollbar-track
