@@ -29,7 +29,7 @@ exports.getInbox = (req, res, next) => {
         return res.status(404).send("User not found");
       }
 
-      const msg = await Message.findOne({ $or: [{ from: userId }, { to: userId }] }, (err) => {
+      const msg = await Message.findOne({ $or: [{ from: userId, to: friendId }, { from: friendId, to: userId }] }, (err) => {
         if (err) return res.status(500).send('err');
       }).sort({ createdAt: -1 });
 

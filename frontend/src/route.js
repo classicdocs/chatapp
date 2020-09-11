@@ -17,6 +17,11 @@ let ROUTES = {
     component: <Home/>,
     auth: true
   },
+  Home1: {
+    path: "/home/:friendId",
+    component: <Home/>,
+    auth: true
+  },
   Friends: {
     path: "/friends",
     component: <Friends/>,

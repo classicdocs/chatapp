@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Button } from "@material-ui/core";
 import { deleteFriend, addFriend } from '../services/friendService';
 import FriendsType from "../constants/FriendsType";
+import history from '../history';
 
 export default class Friend extends Component {
 
@@ -28,13 +29,17 @@ export default class Friend extends Component {
 
   addFriend() {
     addFriend(this.state.friend.id)
-    .then(res => {
-      if (!res.ok) {
-        return;
-      }
+      .then(res => {
+        if (!res.ok) {
+          return;
+        }
 
-      this.props.fetchData();
-    })
+        this.props.fetchData();
+      })
+  }
+
+  sendMessage() {
+    history.push("/home/" + this.state.friend.id);
   }
 
   render() {
@@ -50,7 +55,10 @@ export default class Friend extends Component {
           <Button onClick={() => this.addFriend()}>Add</Button>
         }
         {this.state.type === FriendsType.REMOVE &&
-          <Button onClick={() => this.removeFriend()}>Remove</Button>
+          <div>
+            <Button onClick={() => this.sendMessage()}>Send message</Button>
+            <Button onClick={() => this.removeFriend()}>Remove</Button>
+          </div>
         }
       </div>
     )

@@ -9,7 +9,8 @@ const URL = {
   declineRequst: "/friends/request/",
   deleteFriend: "/friends/",
   searchUsers: "/friends/search",
-  addFriend: "/friends/"
+  addFriend: "/friends/",
+  getFriend: "/friends/"
 }
 
 export async function getFriends() {
@@ -42,4 +43,8 @@ export async function addFriend(friendId) {
 
 export async function searchUsers(searchParam) {
   return await request(URL.searchUsers, {searchParam}, HttpMethod.GET);
+}
+
+export async function getFriend(friendId) {
+  return await request(URL.getFriend + friendId, {}, HttpMethod.GET);
 }

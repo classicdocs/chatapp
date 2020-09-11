@@ -30,8 +30,8 @@ class Header extends Component {
             <Typography variant="h6" style={{ flexGrow: 1 }}>
               Chatapp
             </Typography>
-            {this.props.user && <Button color="inherit" onClick={() => this.navigate("home")}>Inbox</Button>}
-            {this.props.user && <Button color="inherit" onClick={() => this.navigate("friends")}>Friends</Button>}
+            {this.props.user && <Button color="inherit" onClick={() => this.navigate("/home")}>Inbox</Button>}
+            {this.props.user && <Button color="inherit" onClick={() => this.navigate("/friends")}>Friends</Button>}
             {this.props.user && <Button color="inherit" onClick={() => this.logout()}>Logout</Button>}
           </Toolbar>
         </AppBar>

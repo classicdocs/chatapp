@@ -12,35 +12,73 @@ import ListItemText from '@material-ui/core/ListItemText';
 import { getInbox } from '../services/messageService';
 import InboxElement from '../components/InboxElement';
 import Chat from '../components/Chat';
+import history from "../history";
+import { withRouter } from 'react-router-dom'
+import { getFriend } from '../services/friendService';
 
 class Home extends Component {
 
   state = {
     inbox: [],
-    selectedInbox: null
+    selectedInbox: null,
+    friendIdPathParam: undefined
   }
 
   componentDidMount() {
+
+    this.setState({friendIdPathParam: this.props.match.params.friendId});
+
     this.getInbox();
   }
 
   getInbox() {
     getInbox()
       .then(res => {
-        this.setState({ inbox: res.data });
+        this.setState({ inbox: res.data }, () => {
+
+          if (this.state.friendIdPathParam == undefined) {
+            return;
+          }
+        
+          let userAlreadyExistInInbox = false;
+
+          this.state.inbox.forEach(el => {
+            if (el.friend.id == this.state.friendIdPathParam) {
+              userAlreadyExistInInbox = true;
+              this.onInboxElementSelect(el);
+            }
+          })
+
+          if (!this.state.selectedInbox && !userAlreadyExistInInbox) {
+              // get info of user
+              getFriend(this.state.friendIdPathParam)
+              .then(res => {
+                if (!res.ok) {
+                  return;
+                }
+
+                this.setState({inbox: [...this.state.inbox, {friend: res.data}], selectedInbox: {friend: res.data}}, () => console.log(this.state));
+              })
+          }
+
+        });
       })
   }
 
   onInboxElementSelect(el) {
+
     console.log(el);
-    console.log('el selected');
-    this.setState({ selectedInbox: el });
+
+    this.setState({ selectedInbox: null }, () => {
+      this.setState({ selectedInbox: el });
+      history.push("/home/" + el.friend.id);
+
+    });
   }
 
   renderInboxElements() {
 
     return this.state.inbox.map(el => {
-      console.log(el);
       return (
         <ListItem button key={el.friend.id}
         >
@@ -84,4 +122,4 @@ class Home extends Component {
 }
 
 
-export default Home;
+export default withRouter(Home);

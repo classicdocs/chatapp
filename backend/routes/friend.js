@@ -1,4 +1,4 @@
-const { User, toDtos } = require('../models/user');
+const { User, toDtos, toDto } = require('../models/user');
 const { getIds } = require('../util/helper');
 
 /**
@@ -249,6 +249,21 @@ exports.deleteFriend = (req, res, next) => {
   })
 }
 
+/**
+ * GET /friend/:id
+ * Get friend info
+ */
+exports.getFriend = (req, res, next) => {
+  const friendId = req.params.id;
+
+  User.findById(friendId, (err, friend) => {
+    if (err) return res.status(500).send('Error on the server.');
+    if (!friend) return res.status(404).send("User not found");
+
+    return res.status(200).send(toDto(friend));
+
+  })
+}
 
 function isMyFriend(friendId, user) {
 

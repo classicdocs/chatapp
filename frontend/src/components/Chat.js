@@ -40,9 +40,11 @@ export default class Chat extends Component {
   sendMessage() {
       // send message
 
+      this.setState({enterMessageField: ""})
       sendMessage(this.state.friendId, this.state.enterMessageField)
       .then(res => {
         console.log(res.data);
+        this.fetchMessages();
       })
       .catch(err => {
         console.log(err);
