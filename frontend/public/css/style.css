@@ -33,6 +33,15 @@ body {
   flex-direction: column;
 }
 
+.MuiPaper-root.MuiCard-root.login-and-registration-card.MuiPaper-elevation1 {
+  box-shadow: 0px 0 black;
+}
+
+.login-and-registration-actions {
+  display: flex;
+  justify-content: center;
+}
+
 #header-toolbar {
   height: 50px;
   background-color: #3f51b5;
@@ -72,7 +81,7 @@ body {
 .main-content {
   flex-grow: 1;
   display: flex;
-  height: calc(100% - 64x);
+  height: calc(100% - 64px);
   margin-top: 64px;
   background-color: white;
   padding: 0px;
@@ -239,6 +248,44 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+#welcome-page {
+  padding-top: 64px;
+  height: calc(100% - 64px);
+  background-color: white;
+  display: flex;
+}
+
+.welcome-title {
+  font-size: 60px;
+  padding: 10px;
+  margin: 0px;
+  font-weight: bold;
+}
+
+#welcome-left-container {
+  width: 60%;
+  display: flex;
+  flex-grow: 1;
+  margin-top: 50px;
+  align-items: center;
+  flex-direction: column;
+}
+
+#welcome-right-container {
+  width: 40%;
+  padding-top: 50px;
+  padding-right: 50px;
+}
+
+#login-and-registration {
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  width: 100%;
+}
+
+.MuiTabs-flexContainer {
+  justify-content: center;
 }
 
 /*# sourceMappingURL=style.css.map */

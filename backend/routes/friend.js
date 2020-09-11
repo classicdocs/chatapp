@@ -1,4 +1,5 @@
 const { User, toDtos, toDto } = require('../models/user');
+const {Message} = require('../models/message');
 const { getIds } = require('../util/helper');
 
 /**
@@ -136,7 +137,7 @@ exports.sentFriendRequests = (req, res, next) => {
 }
 
 /**
- * POST /friends/request/id/accept
+ * PUT /friends/request/id/accept
  * Accept friends request
  */
 exports.acceptFriendRequest = (req, res, next) => {
@@ -175,7 +176,7 @@ exports.acceptFriendRequest = (req, res, next) => {
 }
 
 /**
- * POST /friends/request/id/decline
+ * PUT /friends/request/id/decline
  * Decline friends request
  */
 exports.declineFriendRequest = (req, res, next) => {
@@ -212,9 +213,47 @@ exports.declineFriendRequest = (req, res, next) => {
   })
 }
 
+/**
+ *  PUT /friend/id/decline
+ * Cancel friend request
+ */
+exports.cancelFriendRequest = (req, res, next) => {
+  const userId = req.userId;
+  const friendId = req.params.id;
+
+  User.findById(userId, (err, user) => {
+    if (err) return res.status(500).send('Error on the server.');
+    if (!user) return res.status(404).send("User not found");
+
+
+    if (!user.sentFriendRequests.includes(friendId)) {
+      return res.status(404).send("Friend request not found");
+    }
+
+    user.sentFriendRequests = user.sentFriendRequests.filter(id => id != friendId);
+
+    User.findById(friendId, (err, friend) => {
+      if (err) return res.status(500).send('Error on the server.');
+      if (!friend) return res.status(404).send("User not found");
+
+      if (!friend.pendingFriendRequests.includes(userId)) {
+        return res.status(404).send("Friend request not found");
+      }
+
+      friend.pendingFriendRequests = friend.pendingFriendRequests.filter(id => id != userId);
+
+      user.save();
+      friend.save();
+
+      return res.status(200).send("Friend request successfully declined!");
+
+    })
+  })
+}
 
 /**
  *  DELETE /friend/id
+ *  Delete a friend
  */
 exports.deleteFriend = (req, res, next) => {
   const userId = req.userId;
@@ -229,6 +268,7 @@ exports.deleteFriend = (req, res, next) => {
     }
 
     user.friends = user.friends.filter(id => id != friendId);
+    user.inbox = user.inbox.filter(id => id != friendId);
 
     User.findById(friendId, (err, friend) => {
       if (err) return res.status(500).send('Error on the server.');
@@ -239,11 +279,19 @@ exports.deleteFriend = (req, res, next) => {
       }
 
       friend.friends = friend.friends.filter(id => id != userId);
+      friend.inbox = friend.inbox.filter(id => id != userId);
 
-      user.save();
-      friend.save();
+      Message.deleteMany({ $or: [{ from: userId, to: friendId }, { from: friendId, to: userId }] }, (err, msgs) => {
+        if (err) return res.status(500).send("Error on the server.");
 
-      return res.status(200).send("Friend successfully removed!");
+        user.save();
+        friend.save();
+
+        return res.status(200).send("Friend successfully removed!");
+
+  
+      })
+
 
     })
   })

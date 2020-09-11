@@ -16,16 +16,7 @@ function a11yProps(index) {
   };
 }
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-    width: 500,
-    backgroundColor: theme.palette.background.paper,
-  },
-}));
-
 export default function Welcome() {
-  const classes = useStyles();
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -33,7 +24,14 @@ export default function Welcome() {
   };
 
   return (
-    <div className={classes.root}>
+    <div id="welcome-page">
+      <div id="welcome-left-container">
+        <p className="welcome-title">Welcome</p>
+        <p className="welcome-title">To</p>
+        <p className="welcome-title">ChatApp</p>
+      </div>
+      <div id="welcome-right-container">
+      <div id="login-and-registration">
       <AppBar position="static">
         <Tabs value={value} onChange={handleChange} aria-label="simple tabs example">
           <Tab label="Login" {...a11yProps(0)} />
@@ -48,6 +46,8 @@ export default function Welcome() {
       <TabPanel value={value} index={1}>
         <Registration></Registration>
       </TabPanel>
+      </div>
+      </div>
     </div>
   )
 }

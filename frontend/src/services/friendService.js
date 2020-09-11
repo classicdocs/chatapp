@@ -7,6 +7,7 @@ const URL = {
   getPendingRequests: "/friends/request/pending",
   acceptRequest: "/friends/request/",
   declineRequst: "/friends/request/",
+  cancelRequest: "/friends/request/",
   deleteFriend: "/friends/",
   searchUsers: "/friends/search",
   addFriend: "/friends/",
@@ -31,6 +32,10 @@ export async function acceptRequest(friendId) {
 
 export async function declineRequst(friendId) {
   return await request(URL.declineRequst + friendId + "/decline", {}, HttpMethod.PUT);
+}
+
+export async function cencelRequest(friendId) {
+  return await request(URL.cancelRequest + friendId + "/cancel", {}, HttpMethod.PUT);
 }
 
 export async function deleteFriend(friendId) {

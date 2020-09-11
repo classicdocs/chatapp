@@ -11,6 +11,7 @@ const upload = multer();
 module.exports = (app) => {
 
   app.post('/api/login', userController.login);
+  app.post('/api/register', userController.register);
   app.get('/api/me', verifyToken, userController.me);
   app.get('/api/friends/search', verifyToken, friendController.searchUsers);
   app.post('/api/friends/:id', verifyToken, friendController.addFriend);
@@ -19,6 +20,7 @@ module.exports = (app) => {
   app.get('/api/friends/request/sent', verifyToken, friendController.sentFriendRequests);
   app.put('/api/friends/request/:id/accept', verifyToken, friendController.acceptFriendRequest);
   app.put('/api/friends/request/:id/decline', verifyToken, friendController.declineFriendRequest);
+  app.put('/api/friends/request/:id/cancel', verifyToken, friendController.cancelFriendRequest);
   app.delete('/api/friends/:id', verifyToken, friendController.deleteFriend);
   app.get('/api/friends/:id', verifyToken, friendController.getFriend);
   app.get('/api/inbox', verifyToken, messageController.getInbox);

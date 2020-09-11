@@ -11,7 +11,7 @@ export default function LoginForm({ onSubmit, onChange, formData }) {
   const loginForm = useRef("loginForm")
 
   return (
-    <Card variant="outlined">
+    <Card className="login-and-registration-card">
       <ValidatorForm
         ref={loginForm}
         onSubmit={onSubmit}
@@ -35,7 +35,7 @@ export default function LoginForm({ onSubmit, onChange, formData }) {
             errorMessages={['Password is required']}
           />
         </CardContent>
-        <CardActions>
+        <CardActions className="login-and-registration-actions">
         <Button
             color="primary"
             variant="contained"

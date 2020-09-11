@@ -1,0 +1,37 @@
+#welcome-page {
+  padding-top: 64px;
+  height: calc(100% - 64px);
+  background-color: white;
+  display: flex;
+}
+
+.welcome-title {
+  font-size: 60px;
+  padding: 10px;
+  margin: 0px;
+  font-weight: bold;
+}
+#welcome-left-container {
+  width: 60%;
+  display: flex;
+  flex-grow: 1;
+  margin-top: 50px;
+  align-items: center;
+  flex-direction: column;
+}
+
+#welcome-right-container {
+  width: 40%;
+  padding-top: 50px;
+  padding-right: 50px;
+}
+
+
+#login-and-registration {
+  border: 1px solid $borderColor;
+  width: 100%;
+}
+
+.MuiTabs-flexContainer {
+  justify-content: center;
+}

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import RequestTypes from "../constants/RequestTypes";
 import { Button, Avatar } from "@material-ui/core";
-import {acceptRequest, declineRequst} from "../services/friendService";
+import {acceptRequest, declineRequst, cencelRequest} from "../services/friendService";
 
 
 export default class Request extends Component {
@@ -38,6 +38,17 @@ export default class Request extends Component {
     })
   }
 
+  cencelRequest() {
+    cencelRequest(this.state.request.id)
+    .then(res => {
+      if (!res.ok) {
+        return;
+      }
+
+      this.props.fetchData();
+    })
+  }
+
   render() {
 
     if (!this.state.request) {
@@ -54,6 +65,8 @@ export default class Request extends Component {
           {this.state.type == RequestTypes.PENDING && <Button onClick={() => this.acceptRequest()}>Accept</Button>
           }
           {this.state.type == RequestTypes.PENDING && <Button onClick={() => this.declineRequst()}>Decline</Button>
+          }
+           {this.state.type == RequestTypes.SENT && <Button onClick={() => this.cencelRequest()}>Cancel</Button>
           }
         </div>
       </div>
