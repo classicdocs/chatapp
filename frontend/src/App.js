@@ -8,7 +8,7 @@ import appReducers from "./reducers/Reducers";
 import { loadUser } from "./actions/AuthActions";
 import Provider from "react-redux/es/components/Provider";
 
-const store = createStore(appReducers);
+const store = createStore(appReducers, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 store.dispatch(loadUser());
 
 function App() {

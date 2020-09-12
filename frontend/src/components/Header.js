@@ -7,12 +7,17 @@ import { isUserLoggedIn, clearUserData } from "../base/Auth";
 import history from "../history";
 import connect from "react-redux/es/connect/connect";
 import {logout} from "../actions/AuthActions";
+import {setSocket} from "../actions/SocketActions";
 
 class Header extends Component {
 
   logout() {
     clearUserData();
     this.props.logout();
+    if (this.props.socket) {
+      console.log('here');
+      this.props.socket.disconnect();
+    }
     history.push("/");
   }
 
@@ -40,8 +45,8 @@ class Header extends Component {
   }
 }
 
-function mapStateToProps({ authReducers }) {
-  return { user: authReducers.user };
+function mapStateToProps({ authReducers, socketReducers }) {
+  return { user: authReducers.user, socket: socketReducers.socket };
 }
 
-export default connect(mapStateToProps, {logout})(Header);
+export default connect(mapStateToProps, {logout, setSocket})(Header);

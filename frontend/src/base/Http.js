@@ -19,6 +19,7 @@ const Axios = (function () {
       }
 
       instance.defaults.headers.common["x-access-token"] = getToken();
+      // instance.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
       instance.all = axios.all;
 
       return instance;

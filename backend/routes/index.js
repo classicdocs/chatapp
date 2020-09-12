@@ -6,9 +6,26 @@ const verifyToken =  require('../config/auth');
 
 const multer = require('multer');
 const upload = multer();
+const socketio = require('socket.io');
+
+module.exports = (app, server) => {
 
 
-module.exports = (app) => {
+  const websocket = socketio().listen(server);
+  websocket.on('connection', (socket) => {
+    console.log("a user connected");
+
+    socket.on('disconnect', () => {
+      console.log('user disconnected');
+    })
+
+    socket.on('chat', (msg) => {
+      console.log("message: " + msg);
+      socket.emit('chat', {msg: "FROM BACK"});
+
+    })
+
+  })
 
   app.post('/api/login', userController.login);
   app.post('/api/register', userController.register);

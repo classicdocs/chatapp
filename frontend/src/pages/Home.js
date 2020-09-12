@@ -16,13 +16,19 @@ import history from "../history";
 import { withRouter } from 'react-router-dom'
 import { getFriend } from '../services/friendService';
 import { Button } from "@material-ui/core";
+import connect from "react-redux/es/connect/connect";
+import {setSocket} from "../actions/SocketActions";
+
+import io from 'socket.io-client';
+import CONFIG from '../config';
+
 
 class Home extends Component {
 
   state = {
     inbox: [],
     selectedInbox: null,
-    friendIdPathParam: undefined
+    friendIdPathParam: undefined,
   }
 
   componentDidMount() {
@@ -30,6 +36,55 @@ class Home extends Component {
     this.setState({ friendIdPathParam: this.props.match.params.friendId });
 
     this.getInbox();
+
+    this.setSocket();
+  }
+
+  setSocket() {
+
+    console.log("set socket");
+
+    console.log(this.props.socket);
+
+    if (this.props.socket && this.props.socket.connected) {
+
+      console.log("socket already exist and connected ")
+      return;
+    }
+
+    const socket = io(CONFIG.socketURL);
+
+    console.log(socket.connected);
+
+
+    socket.on('connect', () => {
+      console.log("connect");
+      console.log(socket.connected);
+      this.props.setSocket(socket); 
+
+      socket.emit('chat', {msg: "ALo"});
+
+      socket.on('chat', (msg) => {
+        console.log("message: " + msg);
+      })
+    });
+    
+   
+
+    socket.on('disconnect', () => {
+      console.log('disconnect');
+
+      if(this.props.socket) {
+        this.props.setSocket(null);
+        socket.disconnect();
+      }
+    })
+
+
+
+
+
+    
   }
 
   getInbox() {
@@ -124,5 +179,8 @@ class Home extends Component {
 
 }
 
+function mapStateToProps({ socketReducers }) {
+  return { socket: socketReducers.socket };
+}
 
-export default withRouter(Home);
+export default withRouter(connect(mapStateToProps, {setSocket})(Home));

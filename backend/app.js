@@ -8,7 +8,6 @@ const bcrypt = require('bcryptjs');
 const cors = require('cors')
 const { User } = require('./models/user');
 const {Message} = require('./models/message');
-const {Storage} = require('@google-cloud/storage');
 
 dotenv.config({ path: '.env' });
 
@@ -87,15 +86,24 @@ mongoose.connection.once('open', () => {
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(cors());
 
-// for parsing multipart/form-data
+// my cors
+app.use((req, res, next) => {
+  res.append('Access-Control-Allow-Origin', ['http://localhost:3000']);
+  res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  res.append('Access-Control-Allow-Credentials', 'true');
+  res.append('Access-Control-Allow-Headers', 'Content-Type, x-access-token');
+  next();
+});
 
-app.use(cors());
 
-require("./routes/index")(app);
-
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log('%s App is running at http://localhost:%d', chalk.green('✓'), port);
 })
+
+require("./routes/index")(app, server);
+
+
 
 module.exports = app;
