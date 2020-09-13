@@ -9,7 +9,8 @@ const UserSchema = new mongoose.Schema({
   friends: [],
   sentFriendRequests: [],
   pendingFriendRequests: [],
-  inbox: []
+  inbox: [],
+  socketId: String
 }, {timestamps: true});
 
 

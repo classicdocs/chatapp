@@ -62,11 +62,6 @@ class Home extends Component {
       console.log(socket.connected);
       this.props.setSocket(socket); 
 
-      socket.emit('chat', {msg: "ALo"});
-
-      socket.on('chat', (msg) => {
-        console.log("message: " + msg);
-      })
     });
     
    
@@ -80,11 +75,6 @@ class Home extends Component {
       }
     })
 
-
-
-
-
-    
   }
 
   getInbox() {

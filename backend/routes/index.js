@@ -8,23 +8,50 @@ const multer = require('multer');
 const upload = multer();
 const socketio = require('socket.io');
 
+const redis =  require("redis");
+
+// list of sockets
+let connections = [];
+  
+global.subscriber = redis.createClient({
+  port      : 6379,              
+  host      : 'localhost'} );
+
+global.publisher = redis.createClient({
+  port      : 6379,              
+  host      : 'localhost'} );
+
 module.exports = (app, server) => {
 
+  
+  subscriber.on("subscribe", function(channel, count) {
+    console.log(`SUBSCRIBE`);
+  });
+    
+  subscriber.on("message", function(channel, message) {
+
+    console.log("channel: " + channel + " , message " + message);
+  
+  });
+
+  subscriber.subscribe("chat");
 
   const websocket = socketio().listen(server);
-  websocket.on('connection', (socket) => {
-    console.log("a user connected");
+
+  websocket.on('connection', socket => {
+    console.log("connection");
+
+    connections.push(socket);
+
+    // save socket id to user
+
+    
 
     socket.on('disconnect', () => {
-      console.log('user disconnected');
+      console.log("User disconnected")
+
+      connections = connections.filter(socket => socket.id != socket.id);
     })
-
-    socket.on('chat', (msg) => {
-      console.log("message: " + msg);
-      socket.emit('chat', {msg: "FROM BACK"});
-
-    })
-
   })
 
   app.post('/api/login', userController.login);
