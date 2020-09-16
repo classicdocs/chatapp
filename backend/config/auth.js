@@ -17,4 +17,18 @@ function verifyToken(req, res, next) {
   });
 }
 
-module.exports = verifyToken;
+async function getUserIdFromToken(token) {
+
+  if (!token)
+    return null;
+    
+  let userId = await jwt.verify(token, config.SECRET, (err, decoded) => {
+    if (err) return null;
+    return decoded.id;
+  });
+
+  
+  return userId;
+}
+
+module.exports = {verifyToken, getUserIdFromToken};

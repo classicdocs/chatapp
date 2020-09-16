@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 import { getMessages, sendMessage } from "../services/messageService";
 import Message from "../components/Message";
 import { TextField, Button, Avatar } from '@material-ui/core';
+import connect from "react-redux/es/connect/connect";
 
-export default class Chat extends Component {
+class Chat extends Component {
 
   constructor(props) {
     super(props);
@@ -20,6 +21,20 @@ export default class Chat extends Component {
 
   componentDidMount() {
     this.fetchMessages();
+  }
+
+  componentWillReceiveProps(props) {
+
+    console.log(props);
+
+    console.log(props.newMessage);
+
+    if (!props.newMessage) {
+      return;
+    }
+
+    this.setState({messages: [...this.state.messages, props.newMessage]});
+
   }
 
   fetchMessages() {
@@ -39,13 +54,17 @@ export default class Chat extends Component {
   }
 
   sendMessage() {
+
+    if (this.state.enterMessageField === "") {
+      return;
+    }
     // send message
 
-    this.setState({ enterMessageField: "" })
     sendMessage(this.state.friendId, this.state.enterMessageField)
       .then(res => {
-        console.log(res.data);
-        this.fetchMessages();
+        this.setState({ enterMessageField: "" })
+
+        // this.fetchMessages();
       })
       .catch(err => {
         console.log(err);
@@ -67,7 +86,7 @@ export default class Chat extends Component {
 
     return this.state.messages.map(msg => {
       return <Message msg={msg} key={msg._id}></Message>
-    })
+    }).reverse()
   }
 
   render() {
@@ -102,3 +121,11 @@ export default class Chat extends Component {
     )
   }
 }
+
+
+function mapStateToProps({socketReducers }) {
+  return { newMessage: socketReducers.newMessage };
+}
+
+
+export default connect(mapStateToProps, {})(Chat);

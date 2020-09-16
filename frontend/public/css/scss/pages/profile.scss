@@ -1,8 +1,8 @@
 #profile-page {
   display: flex;
-  margin-top: 64px;
+  padding-top: 64px;
   flex-grow: 1;
-  height: 100%;
+  height: calc(100% - 64px);
   background-color: white;
   align-items: center;
   flex-direction: column;

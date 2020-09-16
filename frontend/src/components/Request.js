@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import RequestTypes from "../constants/RequestTypes";
 import { Button, Avatar } from "@material-ui/core";
 import {acceptRequest, declineRequst, cencelRequest} from "../services/friendService";
+import connect from 'react-redux/es/connect/connect';
 
-
-export default class Request extends Component {
+class Request extends Component {
 
   constructor(props) {
     super(props);
@@ -21,7 +21,6 @@ export default class Request extends Component {
       if (!res.ok) {
         return;
       }
-
       this.props.fetchData();
     })
 
@@ -33,7 +32,6 @@ export default class Request extends Component {
       if (!res.ok) {
         return;
       }
-
       this.props.fetchData();
     })
   }
@@ -45,6 +43,7 @@ export default class Request extends Component {
         return;
       }
 
+      
       this.props.fetchData();
     })
   }
@@ -73,3 +72,5 @@ export default class Request extends Component {
     )
   }
 }
+
+export default connect(null, {})(Request);

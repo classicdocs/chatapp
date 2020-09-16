@@ -115,7 +115,7 @@ exports.sendMessage = (req, res, next) => {
       let msg = new Message({from: userId, to: friendId, value: message});
       msg.save();
 
-      publisher.publish("chat", msg);
+      publisher.publish("chat", JSON.stringify(msg));
 
   
       return res.status(200).send(msg);

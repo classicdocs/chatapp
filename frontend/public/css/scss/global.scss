@@ -26,3 +26,21 @@ body {
 .MuiAvatar-root {
   margin: 10px;
 } 
+
+#socket-wrapper {
+  height: 100%;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 10px;
+}
+ 
+::-webkit-scrollbar-track {
+  background-color: $borderColor;
+}
+ 
+::-webkit-scrollbar-thumb {
+  background-color: $primaryColor;
+  outline: 1px solid $borderColor;
+}

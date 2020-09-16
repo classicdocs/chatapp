@@ -21,6 +21,7 @@ import {setSocket} from "../actions/SocketActions";
 
 import io from 'socket.io-client';
 import CONFIG from '../config';
+import { getToken } from '../base/Auth';
 
 
 class Home extends Component {
@@ -36,45 +37,6 @@ class Home extends Component {
     this.setState({ friendIdPathParam: this.props.match.params.friendId });
 
     this.getInbox();
-
-    this.setSocket();
-  }
-
-  setSocket() {
-
-    console.log("set socket");
-
-    console.log(this.props.socket);
-
-    if (this.props.socket && this.props.socket.connected) {
-
-      console.log("socket already exist and connected ")
-      return;
-    }
-
-    const socket = io(CONFIG.socketURL);
-
-    console.log(socket.connected);
-
-
-    socket.on('connect', () => {
-      console.log("connect");
-      console.log(socket.connected);
-      this.props.setSocket(socket); 
-
-    });
-    
-   
-
-    socket.on('disconnect', () => {
-      console.log('disconnect');
-
-      if(this.props.socket) {
-        this.props.setSocket(null);
-        socket.disconnect();
-      }
-    })
-
   }
 
   getInbox() {
@@ -169,8 +131,5 @@ class Home extends Component {
 
 }
 
-function mapStateToProps({ socketReducers }) {
-  return { socket: socketReducers.socket };
-}
 
-export default withRouter(connect(mapStateToProps, {setSocket})(Home));
+export default withRouter(Home);

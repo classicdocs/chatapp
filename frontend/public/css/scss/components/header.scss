@@ -2,3 +2,18 @@
   height: 50px;
   background-color: $primaryColor;
 }
+
+#header-friends-container {
+  position: relative;
+  padding-right: 10px;
+}
+
+#header-friends-number {
+  position: absolute;
+  right: 0;
+  background-color: red;
+  border-radius: 50%;
+  padding: 0px 5px;
+  font-size: 12px;
+  font-weight: bold;
+}

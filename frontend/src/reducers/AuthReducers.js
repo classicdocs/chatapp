@@ -22,7 +22,6 @@ const authReducers = (state = initialState, action) => {
         ...state,
         user: undefined
       };
-
     default: return state;
   }
 };

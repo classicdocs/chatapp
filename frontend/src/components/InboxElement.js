@@ -1,8 +1,20 @@
 import React, { Component } from 'react'
 import {isIdFromUser} from "../util/helper";
 import {Avatar} from "@material-ui/core";
+import connect from 'react-redux/es/connect/connect';
+import { flash } from 'react-animations'
+import Radium, {StyleRoot} from 'radium';
+import {newMessage as newMessageAction} from "../actions/SocketActions";
+import { getUserFromLocalStorage } from '../base/Auth';
 
-export default class InboxElement extends Component {
+const styles = {
+  flash: {
+    animation: 'x 1s',
+    animationName: Radium.keyframes(flash, 'flash')
+  }
+}
+
+class InboxElement extends Component {
 
   constructor(props) {
     super(props);
@@ -12,8 +24,37 @@ export default class InboxElement extends Component {
       lastName: props.lastName ? props.lastName : "",
       profileImageUrl: props.profileImageUrl ? props.profileImageUrl : "",
       message: props.message ? props.message : null,
-      selected: false
+      animate: false
     };
+  }
+
+  componentWillReceiveProps(props) {
+
+
+    console.log(this.props);
+
+    let newMessage = props.newMessage;
+
+    if (!this.state.message || !newMessage) {
+      return;
+    }
+
+
+    if ((newMessage.from === this.state.message.from && newMessage.to === this.state.message.to) ||
+    (newMessage.to === this.state.message.from && newMessage.from === this.state.message.to)) {
+
+
+      let animate = newMessage.from === getUserFromLocalStorage()._id ? false : true;
+      this.setState({message: newMessage, animate: animate}, () => {
+
+        setTimeout(() => {
+          this.setState({animate: false})
+          this.props.newMessageAction(null);
+
+        }, 1000)
+      });
+    }
+
   }
 
   renderMessage() {
@@ -30,7 +71,7 @@ export default class InboxElement extends Component {
 
     who += this.state.message.value;
 
-    return <h5>{who}</h5>;
+    return <h4 style={this.state.animate ? styles.flash : {}}>{who}</h4>;
 
   }
 
@@ -41,9 +82,19 @@ export default class InboxElement extends Component {
         <Avatar src={this.state.profileImageUrl}></Avatar>
         <div>
         <h4>{this.state.firstName} {this.state.lastName}</h4>
-        {this.renderMessage()}
+        <StyleRoot>
+          {this.renderMessage()}
+        </StyleRoot>
         </div>
       </div>
     )
   }
 }
+
+function mapStateToProps({socketReducers}) {
+  return {
+    newMessage: socketReducers.newMessage
+  }
+}
+
+export default connect(mapStateToProps, {newMessageAction})(InboxElement);
