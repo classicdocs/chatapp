@@ -46,7 +46,6 @@ export default class Registration extends Component {
   render() {
     return (
       <div id="register">
-        <h1>Register</h1>
         <RegistrationForm
           onSubmit={() => this.register()}
           onChange={this.onChange}

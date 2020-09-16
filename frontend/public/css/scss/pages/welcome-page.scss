@@ -3,6 +3,8 @@
   height: calc(100% - 64px);
   background-color: white;
   display: flex;
+  position: relative;
+
 }
 
 .welcome-title {
@@ -10,6 +12,7 @@
   padding: 10px;
   margin: 0px;
   font-weight: bold;
+  color: white;
 }
 #welcome-left-container {
   width: 60%;
@@ -21,15 +24,17 @@
 }
 
 #welcome-right-container {
-  width: 40%;
+  z-index: 2;
+  width: 30%;
   padding-top: 50px;
-  padding-right: 50px;
+  padding-right: 100px;
 }
 
 
 #login-and-registration {
-  border: 1px solid $borderColor;
   width: 100%;
+  background-color: white;
+  
 }
 
 .MuiTabs-flexContainer {

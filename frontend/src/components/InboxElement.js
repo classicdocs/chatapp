@@ -31,8 +31,6 @@ class InboxElement extends Component {
   componentWillReceiveProps(props) {
 
 
-    console.log(this.props);
-
     let newMessage = props.newMessage;
 
     if (!this.state.message || !newMessage) {

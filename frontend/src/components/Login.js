@@ -46,7 +46,6 @@ class Login extends Component {
   render() {
     return (
       <div id="login">
-        <h1>Login</h1>
         <LoginForm
           onSubmit={() => this.login()}
           onChange={this.onChange}

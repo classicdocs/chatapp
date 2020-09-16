@@ -65,7 +65,7 @@ class Home extends Component {
                   return;
                 }
 
-                this.setState({ inbox: [...this.state.inbox, { friend: res.data }], selectedInbox: { friend: res.data } }, () => console.log(this.state));
+                this.setState({ inbox: [...this.state.inbox, { friend: res.data }], selectedInbox: { friend: res.data } });
               })
           }
 
@@ -75,7 +75,6 @@ class Home extends Component {
 
   onInboxElementSelect(el) {
 
-    console.log(el);
 
     this.setState({ selectedInbox: null }, () => {
       this.setState({ selectedInbox: el });

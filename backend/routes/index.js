@@ -10,6 +10,8 @@ const socketio = require('socket.io');
 const mongoose = require('mongoose');
 const redis = require("redis");
 
+const APPID = process.env.APPID;
+
 // list of sockets
 global.connections = [];
 
@@ -34,8 +36,6 @@ module.exports = (app, server) => {
 
     message = JSON.parse(message);
 
-    console.log("channel: " + channel + " , message " + JSON.stringify(message));
-
     let socketIds = [];
 
     await User.find({
@@ -54,7 +54,6 @@ module.exports = (app, server) => {
 
       socketIds.forEach(id => {
         if (socket.id == id) {
-          console.log('emit');
           socket.emit('message', message);
         }
       });
@@ -80,18 +79,22 @@ module.exports = (app, server) => {
   })
 
   websocket.on('connection', async socket => {
-    console.log("connection");
 
     let userId = socket.handshake.query.userId;
+
+    console.log(`${APPID} - socket.id + " connected!`);
+    console.log(`${APPID} - Number of connections: ` + connections.length);
 
     connections.push(socket);
 
     await User.findByIdAndUpdate(userId, { socketId: socket.id });
 
     socket.on('disconnect', () => {
-      console.log("User disconnected")
 
       connections = connections.filter(socket => socket.id != socket.id);
+
+      console.log(`${APPID} - socket.id + " disconnected`);
+      console.log(`${APPID} - Number of connections: ` + connections.length);
     })
   })
 

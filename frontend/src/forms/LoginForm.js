@@ -20,6 +20,7 @@ export default function LoginForm({ onSubmit, onChange, formData }) {
           <TextValidator
             label="Email"
             onChange={onChange}
+            fullWidth
             name="email"
             value={formData.email}
             validators={['required', 'isEmail']}

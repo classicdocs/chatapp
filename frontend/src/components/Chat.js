@@ -25,10 +25,6 @@ class Chat extends Component {
 
   componentWillReceiveProps(props) {
 
-    console.log(props);
-
-    console.log(props.newMessage);
-
     if (!props.newMessage) {
       return;
     }

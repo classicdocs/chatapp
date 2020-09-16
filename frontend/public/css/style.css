@@ -53,6 +53,7 @@ body {
 
 .MuiPaper-root.MuiCard-root.login-and-registration-card.MuiPaper-elevation1 {
   box-shadow: 0px 0 black;
+  width: 100%;
 }
 
 .login-and-registration-actions {
@@ -94,14 +95,14 @@ body {
 }
 
 #drawer {
-  width: 400px;
+  width: 240px;
   flex-shrink: 0;
   z-index: 10;
 }
 
 .drawer-container {
   overflow: auto;
-  width: 400px;
+  width: 240px;
 }
 .drawer-container .MuiList-root {
   padding: 0px;
@@ -118,6 +119,7 @@ body {
   margin-top: 64px;
   background-color: white;
   padding: 0px;
+  border-right: 1px solid rgba(0, 0, 0, 0.12);
 }
 
 .inbox-element {
@@ -288,6 +290,7 @@ body {
   height: calc(100% - 64px);
   background-color: white;
   display: flex;
+  position: relative;
 }
 
 .welcome-title {
@@ -295,6 +298,7 @@ body {
   padding: 10px;
   margin: 0px;
   font-weight: bold;
+  color: white;
 }
 
 #welcome-left-container {
@@ -307,14 +311,15 @@ body {
 }
 
 #welcome-right-container {
-  width: 40%;
+  z-index: 2;
+  width: 30%;
   padding-top: 50px;
-  padding-right: 50px;
+  padding-right: 100px;
 }
 
 #login-and-registration {
-  border: 1px solid rgba(0, 0, 0, 0.12);
   width: 100%;
+  background-color: white;
 }
 
 .MuiTabs-flexContainer {

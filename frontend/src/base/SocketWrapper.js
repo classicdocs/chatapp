@@ -31,11 +31,8 @@ class SocketWrapper extends Component {
       return;
     }
 
-    console.log("set socket");
-
     if (props.socket && props.socket.connected) {
 
-      console.log("socket already exist and connected ")
       return;
     }
 
@@ -46,7 +43,7 @@ class SocketWrapper extends Component {
     });
 
     socket.on('connect', () => {
-      console.log("connect");
+      console.log(socket.id + " connected!");
       this.props.setSocket(socket); 
 
       socket.on('message', (data) => {
@@ -57,7 +54,7 @@ class SocketWrapper extends Component {
    
 
     socket.on('disconnect', () => {
-      console.log('disconnect');
+      console.log(socket.id + " disconnected");
 
       if(props.socket) {
         props.setSocket(null);

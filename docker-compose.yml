@@ -1,0 +1,28 @@
+
+version : '3'
+
+services:
+    lb:
+        image: haproxy
+        ports:
+            - "8080:8080"
+        volumes:
+            - ./haproxy:/usr/local/etc/haproxy
+    frontend:
+        build:
+            context: ./frontend
+            dockerfile: Dockerfile
+    chatapp_ws1:
+        build:
+            context: ./backend
+            dockerfile: Dockerfile
+        environment:
+            - APPID=WS_1
+    chatapp_ws2:
+        build:
+            context: ./backend
+            dockerfile: Dockerfile
+        environment:
+            - APPID=WS_2
+    rds:
+        image: redis
