@@ -1,4 +1,4 @@
-# BSEP
+# Bachelor thesis
 ``` bash
 Stefan Varga SW-48/2016
 ```
