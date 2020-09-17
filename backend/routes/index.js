@@ -17,12 +17,12 @@ global.connections = [];
 
 global.subscriber = redis.createClient({
   port: 6379,
-  host: 'localhost'
+  host: 'rds'
 });
 
 global.publisher = redis.createClient({
   port: 6379,
-  host: 'localhost'
+  host: 'rds'
 });
 
 module.exports = (app, server) => {
@@ -82,19 +82,20 @@ module.exports = (app, server) => {
 
     let userId = socket.handshake.query.userId;
 
-    console.log(`${APPID} - socket.id + " connected!`);
-    console.log(`${APPID} - Number of connections: ` + connections.length);
-
     connections.push(socket);
+    console.log(`${socket.id} + " connected!`);
+
+    console.log('Number of connections: ' + connections.length);
+
 
     await User.findByIdAndUpdate(userId, { socketId: socket.id });
 
     socket.on('disconnect', () => {
 
-      connections = connections.filter(socket => socket.id != socket.id);
+      connections = connections.filter(s => s.id != socket.id);
 
-      console.log(`${APPID} - socket.id + " disconnected`);
-      console.log(`${APPID} - Number of connections: ` + connections.length);
+      console.log(`${socket.id} + " disconnected`);
+      console.log('Number of connections: ' + connections.length);
     })
   })
 

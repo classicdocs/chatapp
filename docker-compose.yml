@@ -7,22 +7,38 @@ services:
         ports:
             - "8080:8080"
         volumes:
-            - ./haproxy:/usr/local/etc/haproxy
+            - ./haproxy/haproxy.conf:/usr/local/etc/haproxy/haproxy.cfg
+        depends_on:
+            - ws1
+            - ws2
     frontend:
         build:
             context: ./frontend
             dockerfile: Dockerfile
-    chatapp_ws1:
+        ports:
+            - 3000:80
+    ws1:
         build:
             context: ./backend
             dockerfile: Dockerfile
+        depends_on:
+            - rds
+            - mongo
         environment:
             - APPID=WS_1
-    chatapp_ws2:
+    ws2:
         build:
             context: ./backend
             dockerfile: Dockerfile
+        depends_on:
+            - rds
+            - mongo
         environment:
             - APPID=WS_2
     rds:
         image: redis
+    mongo:
+        image: mongo
+        restart: always
+        ports:
+            - 27017:27017
