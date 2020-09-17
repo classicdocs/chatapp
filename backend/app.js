@@ -28,7 +28,7 @@ mongoose.connection.on('error', (err) => {
 
 
 mongoose.connection.once('open', () => {
-  console.log("Connected to MongoDB");
+  console.log("Connected to MongoDB \n");
 
   var user1 = new User({
     email: "user1@gmail.com", firstName: "firstName1",

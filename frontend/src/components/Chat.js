@@ -29,7 +29,9 @@ class Chat extends Component {
       return;
     }
 
-    this.setState({messages: [...this.state.messages, props.newMessage]});
+    if (props.newMessage.from === this.state.friendId || props.newMessage.to === this.state.friendId) {
+      this.setState({messages: [...this.state.messages, props.newMessage]});
+    }
 
   }
 
